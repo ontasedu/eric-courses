@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	 version="3.0">
+
+	<security-role>
+		<role-name>Administrator</role-name>
+	</security-role>
+	<security-role>
+		<role-name>Manager</role-name>
+	</security-role>
+	<security-role>
+		<role-name>Clerk</role-name>
+	</security-role>
+	<security-role>
+		<role-name>AccountHolder</role-name>
+	</security-role>
+   
+   <!--Security constraints-->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Admin services UI</web-resource-name>
+            <url-pattern>/AdminServices.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Administrator</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Business services UI</web-resource-name>
+            <url-pattern>/BizServices.jsp</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Manager</role-name>
+            <role-name>Clerk</role-name>
+            <role-name>AccountHolder</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+    <!--Login authorization information-->
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/Login.html</form-login-page>
+            <form-error-page>/LoginError.html</form-error-page>
+        </form-login-config>
+    </login-config>
+
+
+    <!--Error pages-->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/PermissionError.jsp</location>
+    </error-page>
+
+    <error-page>
+    	<exception-type>java.lang.Exception</exception-type>
+        <location>/ServerError.jsp</location>
+    </error-page>
+
+
+    <!-- General config settings -->
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>

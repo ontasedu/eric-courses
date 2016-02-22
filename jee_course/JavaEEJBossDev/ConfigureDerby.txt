@@ -1,0 +1,5 @@
+	<datasource jta="true" jndi-name="java:/DerbyDS" pool-name="DerbyDS" enabled="true" use-ccm="false">
+		<connection-url>jdbc:derby://localhost:1527/C:\JavaEEJBossDev\Databases\Derby\Employees</connection-url>
+		<driver-class>org.apache.derby.jdbc.ClientDriver</driver-class>
+		<driver>derbyclient.jar</driver>
+	</datasource>

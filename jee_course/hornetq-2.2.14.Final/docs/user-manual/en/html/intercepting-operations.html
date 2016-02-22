@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 45. Intercepting Operations</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.74.0"/><link rel="home" href="index.html" title="HornetQ User Manual"/><link rel="up" href="index.html" title="HornetQ User Manual"/><link rel="prev" href="spring.integration.html" title="Chapter 44. Spring Integration"/><link rel="next" href="interoperability.html" title="Chapter 46. Interoperability"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="spring.integration.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="interoperability.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="intercepting-operations"/>Chapter 45. Intercepting Operations</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="intercepting-operations.html#d0e11582">45.1. Implementing The Interceptors</a></span></dt><dt><span class="section"><a href="intercepting-operations.html#d0e11607">45.2. Configuring The Interceptors</a></span></dt><dt><span class="section"><a href="intercepting-operations.html#d0e11619">45.3. Interceptors on the Client Side</a></span></dt><dt><span class="section"><a href="intercepting-operations.html#d0e11635">45.4. Example</a></span></dt></dl></div><p>HornetQ supports <span class="emphasis"><em>interceptors</em></span> to intercept packets entering
+       the server. Any supplied interceptors would be called for any packet entering 
+        the server, this allows custom code to be executed, e.g. for auditing packets,
+      filtering or other reasons. Interceptors can change the packets they intercept.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="d0e11582"/>45.1. Implementing The Interceptors</h2></div></div></div><p>A interceptor must implement the <code class="literal">Interceptor interface</code>:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">
+package org.hornetq.api.core.interceptor;
+
+public interface Interceptor
+{   
+   boolean intercept(Packet packet, RemotingConnection connection) 
+                throws HornetQException;
+}
+         </pre><p>The returned boolean value is important:</p><div class="itemizedlist"><ul><li><p>if <code class="literal">true</code> is returned, the process continues normally</p></li><li><p>if <code class="literal">false</code> is returned, the process is aborted, no other
+               interceptors will be called and the packet will not be handled by the server at
+               all.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="d0e11607"/>45.2. Configuring The Interceptors</h2></div></div></div><p>The interceptors are configured in <code class="literal">hornetq-configuration.xml</code>:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">
+&lt;remoting-interceptors&gt;
+   &lt;class-name&gt;org.hornetq.jms.example.LoginInterceptor&lt;/class-name&gt;
+   &lt;class-name&gt;org.hornetq.jms.example.AdditionalPropertyInterceptor&lt;/class-name&gt;
+&lt;/remoting-interceptors&gt;
+         </pre><p>The interceptors classes (and their dependencies) must be added to the server classpath
+         to be properly instantiated and called.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="d0e11619"/>45.3. Interceptors on the Client Side</h2></div></div></div><p>The interceptors can also be run on the client side to intercept packets
+         <span class="emphasis"><em>sent by the server</em></span> by adding the interceptor to the <code class="code">ClientSessionFactory</code>
+         with the <code class="code">addInterceptor()</code> method.</p><p>The interceptors classes (and their dependencies) must be added to the client classpath
+         to be properly instantiated and called from the client side.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="d0e11635"/>45.4. Example</h2></div></div></div><p>See <a class="xref" href="examples.html#examples.interceptor" title="11.1.25. Interceptor">Section 11.1.25, “Interceptor”</a> for an example which
+         shows how to use interceptors to add properties to a message on the server.</p></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="spring.integration.html"><strong>Prev</strong>Chapter 44. Spring Integration</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="interoperability.html"><strong>Next</strong>Chapter 46. Interoperability</a></li></ul></body></html>

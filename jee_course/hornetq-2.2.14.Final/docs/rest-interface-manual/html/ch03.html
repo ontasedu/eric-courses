@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 3. HornetQ REST Interface Basics</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="ch02.html" title="Chapter 2. Installation and Configuration"/><link rel="next" href="ch04.html" title="Chapter 4. Posting Messages"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="ch02.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="ch04.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e171"/>Chapter 3. HornetQ REST Interface Basics</h2></div></div></div><div class="toc"><dl><dt><span class="sect1"><a href="ch03.html#d0e176">3.1. Queue and Topic Resources</a></span></dt><dt><span class="sect1"><a href="ch03.html#d0e199">3.2. Queue Resource Response Headers</a></span></dt><dt><span class="sect1"><a href="ch03.html#d0e229">3.3. Topic Resource Respones Headers</a></span></dt></dl></div><p>The HornetQ REST interface publishes a variety of REST resources to
+    perform various tasks on a queue or topic. Only the top-level queue and
+    topic URI schemes are published to the outside world. You must discover
+    all over resources to interact with by looking for and traversing links.
+    You'll find published links within custom response headers and embedded in
+    published XML representations. Let's look at how this works.</p><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e176"/>3.1. Queue and Topic Resources</h2></div></div></div><p>To interact with a queue or topic you do a HEAD or GET request on
+      the following relative URI pattern:</p><pre class="programlisting">
+/queues/{name}
+/topics/{name}</pre><p>The base of the URI is the base URL of the WAR you deployed the
+      HornetQ REST server within as defined in the Installation and
+      Configuration section of this document. Replace the
+      <code class="literal">{name}</code> string within the above URI pattern with the
+      name of the queue or topic you are interested in interacting with. For
+      example if you have configured a JMS topic named "foo" within your
+      <code class="literal">hornetq-jms.xml</code> file, the URI name should be
+      "jms.topic.foo". If you have configured a JMS queue name "bar" within
+      your <code class="literal">hornetq-jms.xml</code> file, the URI name should be
+      "jms.queue.bar". Internally, HornetQ prepends the "jms.topic" or
+      "jms.queue" strings to the name of the deployed destination. Next,
+      perform your HEAD or GET request on this URI. Here's what a
+      request/response would look like.</p><pre class="programlisting">
+HEAD /queues/jms.queue.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/jms.queue.bar/create
+msg-pull-consumers: http://example.com/queues/jms.queue.bar/pull-consumers
+msg-push-consumers: http://example.com/queues/jms.queue.bar/push-consumers</pre><p>The HEAD or GET response contains a number of custom response
+      headers that are URLs to additional REST resources that allow you to
+      interact with the queue or topic in different ways. It is important not
+      to rely on the scheme of the URLs returned within these headers as they
+      are an implementation detail. Treat them as opaque and query for them
+      each and every time you initially interact (at boot time) with the
+      server. If you treat all URLs as opaque then you will be isolated from
+      implementation changes as the HornetQ REST interface evolves over
+      time.</p><p/></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e199"/>3.2. Queue Resource Response Headers</h2></div></div></div><p>Below is a list of response headers you should expect when
+      interacting with a Queue resource.</p><div class="variablelist"><dl><dt><span class="term">msg-create</span></dt><dd><p>This is a URL you POST messages to. The semantics of this
+            link are described in Chapter 4.</p></dd><dt><span class="term">msg-create-with-id</span></dt><dd><p>This is a URL template you POST message to. The semantics of
+            this link are described in Chapter 4.</p></dd><dt><span class="term">msg-pull-consumers</span></dt><dd><p>This is a URL for creating consumers that will pull from a
+            queue. The semantics of this link are described in Chapter
+            5.</p></dd><dt><span class="term">msg-push-consumers</span></dt><dd><p>This is a URL for registering other URLs you want the
+            HornetQ REST server to push messages to. The semantics of this
+            link are described in Chapter 6</p></dd></dl></div></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e229"/>3.3. Topic Resource Respones Headers</h2></div></div></div><p>Below is a list of response headers you should expect when
+      interacting with a Topic resource.</p><div class="variablelist"><dl><dt><span class="term">msg-create</span></dt><dd><p>This is a URL you POST messages to. The semantics of this
+            link are described in Chapter 4.</p></dd><dt><span class="term">msg-create-with-id</span></dt><dd><p>This is a URL template you POST messages to. The semantics
+            of this link are described in Chapter 4.</p></dd><dt><span class="term">msg-pull-subscriptions</span></dt><dd><p>This is a URL for creating subscribers that will pull from a
+            topic. The semantics of this link are described in Chapter
+            5.</p></dd><dt><span class="term">msg-push-subscriptions</span></dt><dd><p>This is a URL for registering other URLs you want the
+            HornetQ REST server to push messages to. The semantics of this
+            link are described in Chapter 6.</p></dd></dl></div><p/></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="ch02.html"><strong>Prev</strong>Chapter 2. Installation and Configuration</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="ch04.html"><strong>Next</strong>Chapter 4. Posting Messages</a></li></ul></body></html>

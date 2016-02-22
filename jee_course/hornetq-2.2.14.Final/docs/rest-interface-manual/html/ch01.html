@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 1. Introduction</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="preface.html" title="Preface"/><link rel="next" href="ch02.html" title="Chapter 2. Installation and Configuration"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="preface.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="ch02.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e14"/>Chapter 1. Introduction</h2></div></div></div><div class="toc"><dl><dt><span class="sect1"><a href="ch01.html#d0e24">1.1. Goals of REST Interface</a></span></dt></dl></div><p>The HornetQ REST interface allows you to leverage the reliability
+    and scalability features of HornetQ over a simple REST/HTTP interface.
+    Messages are produced and consumed by sending and receiving simple HTTP
+    messages that contain the content you want to push around. For instance,
+    here's a simple example of posting an order to an order processing queue
+    express as an HTTP message:</p><pre class="programlisting">
+POST /queue/orders/create HTTP/1.1
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone 4&lt;/item&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;</pre><p>As you can see, we're just posting some arbitrary XML
+    document to a URL. When the XML is received on the server is it processed
+    within HornetQ as a JMS message and distributed through core HornetQ.
+    Simple and easy. Consuming messages from a queue or topic looks very
+    similar. We'll discuss the entire interface in detail later in this
+    docbook.</p><p/><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e24"/>1.1. Goals of REST Interface</h2></div></div></div><p>Why would you want to use HornetQ's REST interface? What are the
+      goals of the REST interface?</p><div class="itemizedlist"><ul><li><p>Easily usable by machine-based (code) clients.</p></li><li><p>Zero client footprint. We want HornetQ to be usable by any
+          client/programming language that has an adequate HTTP client
+          library. You shouldn't have to download, install, and configure a
+          special library to interact with HornetQ.</p></li><li><p>Lightweight interoperability. The HTTP protocol is strong
+          enough to be our message exchange protocol. Since interactions are
+          RESTful the HTTP uniform interface provides all the interoperability
+          you need to communicate between different languages, platforms, and
+          even messaging implementations that choose to implement the same
+          RESTful interface as HornetQ (i.e. the <a xmlns:xlink="http://www.w3.org/1999/xlink" href="http://rest-star.org">REST-*</a> effort.)</p></li><li><p>No envelope (i.e. SOAP) or feed (i.e. Atom) format
+          requirements. You shouldn't have to learn, use, or parse a specific
+          XML document format in order to send and receive messages through
+          HornetQ's REST interface.</p></li><li><p>Leverage the reliability, scalability, and clustering features
+          of HornetQ on the back end without sacrificing the simplicity of a
+          REST interface.</p><p/></li></ul></div></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="preface.html"><strong>Prev</strong>Preface</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="ch02.html"><strong>Next</strong>Chapter 2. Installation and Configuration</a></li></ul></body></html>

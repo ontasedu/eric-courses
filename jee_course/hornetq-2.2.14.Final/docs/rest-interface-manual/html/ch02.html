@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 2. Installation and Configuration</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="ch01.html" title="Chapter 1. Introduction"/><link rel="next" href="ch03.html" title="Chapter 3. HornetQ REST Interface Basics"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="ch01.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="ch03.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e49"/>Chapter 2. Installation and Configuration</h2></div></div></div><div class="toc"><dl><dt><span class="sect1"><a href="ch02.html#d0e57">2.1. Installing Within Pre-configured Environment</a></span></dt><dt><span class="sect1"><a href="ch02.html#d0e83">2.2. Bootstrapping HornetQ Along with REST</a></span></dt><dt><span class="sect1"><a href="ch02.html#d0e95">2.3. REST Configuration</a></span></dt></dl></div><p>HornetQ's REST interface is installed as a Web archive (WAR). It
+    depends on the <a xmlns:xlink="http://www.w3.org/1999/xlink" href="http://jboss.org/resteasy">RESTEasy</a>
+    project and can currently only run within a servlet container. Installing
+    the HornetQ REST interface is a little bit different depending whether
+    HornetQ is already installed and configured for your environment (e.g.
+    you're deploying within JBoss AS 7) or you want the HornetQ REST
+    WAR to startup and manage the HornetQ server (e.g. you're deploying
+    within Tomcat).</p><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e57"/>2.1. Installing Within Pre-configured Environment</h2></div></div></div><p>The section should be used when you want to use the HornetQ REST
+      interface in an environment that already has HornetQ installed and
+      running, e.g. JBoss AS 7. You must create a Web archive
+      (.WAR) file with the following web.xml settings:</p><pre class="programlisting">
+&lt;web-app&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap&lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.hornetq.rest.integration.RestMessagingBootstrapListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+    &lt;filter&gt;
+        &lt;filter-name&gt;Rest-Messaging&lt;/filter-name&gt;
+        &lt;filter-class&gt;
+            org.jboss.resteasy.plugins.server.servlet.FilterDispatcher
+        &lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;Rest-Messaging&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+&lt;/web-app&gt;</pre><p>Within your WEB-INF/lib directory you must have the
+      hornetq-rest.jar file. If RESTEasy is not installed within your
+      environment, you must add the RESTEasy jar files within the lib
+      directory as well (note: RESTEasy is available in most JBoss AS
+      7 profiles). Here's a sample Maven pom.xml that can build your
+      WAR for this case. If you are unfamiliar with the Maven WAR 
+      plugin please reference the <a xmlns:xlink="http://www.w3.org/1999/xlink" href="http://maven.apache.org/plugins/maven-war-plugin/usage.html">
+      Maven documentation</a>.</p><pre class="programlisting">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;org.somebody&lt;/groupId&gt;
+    &lt;artifactId&gt;myapp&lt;/artifactId&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;name&gt;My App&lt;/name&gt;
+    &lt;version&gt;0.1-SNAPSHOT&lt;/version&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;jboss&lt;/id&gt;
+            &lt;url&gt;http://repository.jboss.org/nexus/content/groups/public/&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.6&lt;/source&gt;
+                    &lt;target&gt;1.6&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hornetq.rest&lt;/groupId&gt;
+            &lt;artifactId&gt;hornetq-rest&lt;/artifactId&gt;
+            &lt;version&gt;2.2.14.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</pre><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="note"><h2>Note</h2><p>JBoss AS 7 loads classes differently than previous versions.
+      To work properly in AS 7 the the WAR will need this in its MANIFEST.MF:</p><pre class="programlisting">Dependencies: org.hornetq, org.jboss.netty</pre><p>You can add this to the <code class="literal">&lt;plugins&gt;</code> section of the
+       pom.xml to create this entry automatically:</p><pre class="programlisting">
+&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;
+    &lt;configuration&gt;
+        &lt;archive&gt;
+            &lt;manifestEntries&gt;
+                &lt;Dependencies&gt;org.hornetq, org.jboss.netty&lt;/Dependencies&gt;
+            &lt;/manifestEntries&gt;
+        &lt;/archive&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;</pre></div></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e83"/>2.2. Bootstrapping HornetQ Along with REST</h2></div></div></div><p>You can bootstrap HornetQ within your WAR as well. To do this, you
+      must have the HornetQ core and JMS jars along with Netty, Resteasy, and
+      the HornetQ REST jar within your WEB-INF/lib. You must also have a
+      hornetq-configuration.xml, hornetq-jms.xml, and hornetq-users.xml config
+      files within WEB-INF/classes. The examples that come with the HornetQ
+      REST distribution show how to do this. You must also add an additional
+      listener to your web.xml file. Here's an example:</p><pre class="programlisting">
+&lt;web-app&gt;
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap&lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.hornetq.rest.integration.HornetqBootstrapListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+    &lt;listener&gt;
+        &lt;listener-class&gt;org.hornetq.rest.integration.RestMessagingBootstrapListener&lt;/listener-class&gt;
+    &lt;/listener&gt;
+
+    &lt;filter&gt;
+        &lt;filter-name&gt;Rest-Messaging&lt;/filter-name&gt;
+        &lt;filter-class&gt;
+            org.jboss.resteasy.plugins.server.servlet.FilterDispatcher
+        &lt;/filter-class&gt;
+    &lt;/filter&gt;
+
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;Rest-Messaging&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+&lt;/web-app&gt;</pre><p>Here's a Maven pom.xml file for creating a WAR for this
+      environment. Make sure your hornetq configuration files are within the
+      src/main/resources directory so that they are stuffed within the WAR's
+      WEB-INF/classes directory!</p><pre class="programlisting">
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;groupId&gt;org.somebody&lt;/groupId&gt;
+    &lt;artifactId&gt;myapp&lt;/artifactId&gt;
+    &lt;packaging&gt;war&lt;/packaging&gt;
+    &lt;name&gt;My App&lt;/name&gt;
+    &lt;version&gt;0.1-SNAPSHOT&lt;/version&gt;
+    &lt;repositories&gt;
+        &lt;repository&gt;
+            &lt;id&gt;jboss&lt;/id&gt;
+            &lt;url&gt;http://repository.jboss.org/nexus/content/groups/public/&lt;/url&gt;
+        &lt;/repository&gt;
+    &lt;/repositories&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.6&lt;/source&gt;
+                    &lt;target&gt;1.6&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hornetq&lt;/groupId&gt;
+            &lt;artifactId&gt;hornetq-core&lt;/artifactId&gt;
+            &lt;version&gt;2.2.9.AS7.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.netty&lt;/groupId&gt;
+            &lt;artifactId&gt;netty&lt;/artifactId&gt;
+            &lt;version&gt;3.2.7.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hornetq&lt;/groupId&gt;
+            &lt;artifactId&gt;hornetq-jms&lt;/artifactId&gt;
+            &lt;version&gt;2.2.9.AS7.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.spec.javax.jms&lt;/groupId&gt;
+            &lt;artifactId&gt;jboss-jms-api_1.1_spec&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0.Beta1&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.hornetq.rest&lt;/groupId&gt;
+            &lt;artifactId&gt;hornetq-rest&lt;/artifactId&gt;
+            &lt;version&gt;2.2.14.Final&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.resteasy&lt;/groupId&gt;
+            &lt;artifactId&gt;resteasy-jaxrs&lt;/artifactId&gt;
+            &lt;version&gt;2.3.0.GA&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.jboss.resteasy&lt;/groupId&gt;
+            &lt;artifactId&gt;resteasy-jaxb-provider&lt;/artifactId&gt;
+            &lt;version&gt;2.3.0.GA&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/project&gt;</pre><p/></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e95"/>2.3. REST Configuration</h2></div></div></div><p>The HornetQ REST implementation does have some configuration
+      options. These are configured via XML configuration file that must be in
+      your WEB-INF/classes directory. You must set the web.xml context-param
+      <code class="literal">rest.messaging.config.file</code> to specify the name of the
+      configuration file. Below is the format of the XML configuration file
+      and the default values for each.</p><pre class="programlisting">
+&lt;rest-messaging&gt;
+   &lt;server-in-vm-id&gt;0&lt;/server-in-vm-id&gt;
+   &lt;use-link-headers&gt;false&lt;/use-link-headers&gt;
+   &lt;default-durable-send&gt;false&lt;/default-durable-send&gt;
+   &lt;dups-ok&gt;true&lt;/dups-ok&gt;
+   &lt;topic-push-store-dir&gt;topic-push-store&lt;/topic-push-store-dir&gt;
+   &lt;queue-push-store-dir&gt;queue-push-store&lt;/queue-push-store-dir&gt;
+   &lt;producer-session-pool-size&gt;10&lt;/producer-session-pool-size&gt;
+   &lt;session-timeout-task-interval&gt;1&lt;/session-timeout-task-interval&gt;
+   &lt;consumer-session-timeout-seconds&gt;300&lt;/consumer-session-timeout-seconds&gt;
+   &lt;consumer-window-size&gt;-1&lt;/consumer-window-size&gt;
+&lt;/rest-messaging</pre><p>Let's give an explanation of each config option.</p><div class="variablelist"><dl><dt><span class="term">server-in-vm-id</span></dt><dd><p>The HornetQ REST impl uses the IN-VM transport to
+            communicate with HornetQ. It uses the default server id, which is
+            "0".</p></dd><dt><span class="term">use-link-headers</span></dt><dd><p>By default, all links (URLs) are published using custom
+            headers. You can instead have the HornetQ REST implementation
+            publish links using the <a xmlns:xlink="http://www.w3.org/1999/xlink" href="http://tools.ietf.org/html/draft-nottingham-http-link-header-10">Link
+            Header specification</a> instead if you desire.</p></dd><dt><span class="term">default-durable-send</span></dt><dd><p>Whether a posted message should be persisted by default if
+            the user does not specify a durable query parameter.</p></dd><dt><span class="term">dups-ok</span></dt><dd><p>If this is true, no duplicate detection protocol will be
+            enforced for message posting.</p></dd><dt><span class="term">topic-push-store-dir</span></dt><dd><p>This must be a relative or absolute file system path. This
+            is a directory where push registrations for topics are stored. See
+            Chapter 6.</p></dd><dt><span class="term">queue-push-store-dir</span></dt><dd><p>This must be a relative or absolute file system path. This
+            is a directory where push registrations for queues are stored. See
+            Chapter 6.</p></dd><dt><span class="term">producer-session-pool-size</span></dt><dd><p>The REST implementation pools HornetQ sessions for sending
+            messages. This is the size of the pool. That number of sessions
+            will be created at startup time.</p></dd><dt><span class="term">session-timeout-task-interval</span></dt><dd><p>Pull consumers and pull subscriptions can time out. This is
+            the interval the thread that checks for timed-out sessions will
+            run at. A value of 1 means it will run every 1 second.</p></dd><dt><span class="term">consumer-session-timeout-seconds</span></dt><dd><p>Timeout in seconds for pull consumers/subscriptions that
+            remain idle for that amount of time.</p></dd><dt><span class="term">consumer-window-size</span></dt><dd><p>For consumers, this config option is the same as the HornetQ
+            one of the same name. It will be used by sessions created by the
+            HornetQ REST implementation.</p></dd></dl></div></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="ch01.html"><strong>Prev</strong>Chapter 1. Introduction</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="ch03.html"><strong>Next</strong>Chapter 3. HornetQ REST Interface Basics</a></li></ul></body></html>

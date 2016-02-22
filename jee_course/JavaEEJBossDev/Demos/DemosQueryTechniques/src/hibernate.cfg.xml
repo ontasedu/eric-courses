@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    
+    <session-factory>
+
+        <!-- Connection properties are defined in hibernate.properties -->
+
+		<!--  Include mapping files -->
+        <mapping resource="mypackage/Employee.hbm.xml"/>
+        <mapping resource="mypackage/Skill.hbm.xml"/>
+        
+        <!--  Include other files, e.g. queries and global metadata -->
+        <mapping resource="META-INF/EmployeeQueriesHql.hbm.xml"/>
+
+    </session-factory>
+</hibernate-configuration>

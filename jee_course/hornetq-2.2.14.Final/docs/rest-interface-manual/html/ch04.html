@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 4. Posting Messages</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="ch03.html" title="Chapter 3. HornetQ REST Interface Basics"/><link rel="next" href="ch05.html" title="Chapter 5. Consuming Messages via Pull"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="ch03.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="ch05.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e260"/>Chapter 4. Posting Messages</h2></div></div></div><div class="toc"><dl><dt><span class="sect1"><a href="ch04.html#d0e315">4.1. Duplicate Detection</a></span></dt><dt><span class="sect1"><a href="ch04.html#d0e426">4.2. Persistent Messages</a></span></dt><dt><span class="sect1"><a href="ch04.html#d0e445">4.3. Expiration and Priority</a></span></dt></dl></div><p>This chapter discusses the protocol for posting messages to a queue
+    or a topic. In Chapter 3, you saw that a queue or topic resource publishes
+    variable custom headers that are links to other RESTful resources. The
+    <code class="literal">msg-create</code> header is the URL you post messages to.
+    Messages are published to a queue or topic by sending a simple HTTP
+    message to the URL published by the msg-create header. The HTTP message
+    contains whatever content you want to publish to the HornetQ destination.
+    Here's an example scenario:</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Obtain the starting <code class="literal">msg-create</code> header from
+        the queue or topic resource.</p><pre class="programlisting">HEAD /queues/jms.queue.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/jms.queue.bar/create
+msg-create-with-id: http://example.com/queues/jms.queue.bar/create/{id}
+</pre></li><li><p>Do a POST to the URL contained in the
+        <code class="literal">msg-create</code> header.</p><pre class="programlisting">POST /queues/jms.queue.bar/create
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/name&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/jms.queue.bar/create/002
+</pre><p>A successful response will return a 201 response code. Also
+        notice that a <code class="literal">msg-create-next</code> response header is
+        sent as well. You must use this URL to POST your next message.</p></li><li><p>POST your next message to the queue using the URL returned in
+        the <code class="literal">msg-create-next</code> header.</p><pre class="programlisting">POST /queues/jms.queue.bar/create/002
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Monica&lt;/name&gt;
+   &lt;item&gt;iPad&lt;/item&gt;
+   &lt;cost&gt;$499.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response --
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/jms.queue.bar/create/003
+</pre><p>Continue using the new <code class="literal">msg-create-next</code>
+        header returned with each response.</p></li></ol></div><p>It is <span class="emphasis"><em>VERY IMPORTANT</em></span> that you never re-use
+    returned <code class="literal">msg-create-next</code> headers to post new messages.
+    This URL may be uniquely generated for each message and used for duplicate
+    detection. If you lose the URL within the
+    <code class="literal">msg-create-next</code> header, then just go back to the queue
+    or topic resource to get the msg-create URL.</p><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e315"/>4.1. Duplicate Detection</h2></div></div></div><p>Sometimes you might have network problems when posting new
+      messages to a queue or topic. You may do a POST and never receive a
+      response. Unfortunately, you don't know whether or not the server
+      received the message and so a re-post of the message might cause
+      duplicates to be posted to the queue or topic. By default, the HornetQ
+      REST interface is configured to accept and post duplicate messages. You
+      can change this by turning on duplicate message detection by setting the
+      <code class="literal">dups-ok</code> config option to <code class="literal">false</code> as
+      described in Chapter 3. When you do this, the initial POST to the
+      msg-create URL will redirect you, using the standard HTTP 307
+      redirection mechanism to a unique URL to POST to. All other interactions
+      remain the same as discussed earlier. Here's an example:</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Obtain the starting <code class="literal">msg-create</code> header from
+          the queue or topic resource.</p><pre class="programlisting">HEAD /queues/jms.queue.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/jms.queue.bar/create
+msg-create-with-id: http://example.com/queues/jms.queue.bar/create/{id}
+</pre></li><li><p>Do a POST to the URL contained in the
+          <code class="literal">msg-create</code> header.</p><pre class="programlisting">POST /queues/jms.queue.bar/create
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/name&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response ---
+HTTP/1.1 307 Redirect
+Location: http://example.com/queues/jms.queue.bar/create/001
+</pre><p>A successful response will return a 307 response code. This
+          is standard HTTP protocol. It is telling you that you must re-POST
+          to the URL contained within the <code class="literal">Location</code>
+          header.</p></li><li><p>re-POST your message to the URL provided within the
+          <code class="literal">Location</code> header<code class="literal">.</code></p><pre class="programlisting">POST /queues/jms.queue.bar/create/001
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/name&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response --
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/jms.queue.bar/create/002
+</pre><p>You should receive a 201 Created response. If there is a
+          network failure, just re-POST to the Location header. For new
+          messages, use the returned <code class="literal">msg-create-next</code> header
+          returned with each response.</p></li><li><p>POST any new message to the returned
+          <code class="literal">msg-create-next</code> header.</p><pre class="programlisting">POST /queues/jms.queue.bar/create/002
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Monica&lt;/name&gt;
+   &lt;item&gt;iPad&lt;/name&gt;
+   &lt;cost&gt;$499.99&lt;/cost&gt;
+&lt;/order&gt;
+
+--- Response --
+HTTP/1.1 201 Created
+msg-create-next: http://example.com/queues/jms.queue.bar/create/003</pre><p>If
+          there ever is a network problem, just repost to the URL provided in
+          the <code class="literal">msg-create-next</code> header.</p></li></ol></div><p>How can this work? As you can see, with each successful response,
+      the HornetQ REST server returns a uniquely generated URL within the
+      msg-create-next header. This URL is dedicated to the next new message
+      you want to post. Behind the scenes, the code extracts an identify from
+      the URL and uses HornetQ's duplicate detection mechanism by setting the
+      <code class="literal">DUPLICATE_DETECTION_ID</code> property of the JMS message
+      that is actually posted to the system.</p><p>An alternative to this approach is to use the
+      <code class="literal">msg-create-with-id</code> header. This is not an invokable
+      URL, but a URL template. The idea is that the client provides the
+      <code class="literal">DUPLICATE_DETECTION_ID</code> and creates it's own
+      <code class="literal">create-next</code> URL. The
+      <code class="literal">msg-create-with-id</code> header looks like this (you've see
+      it in previous examples, but we haven't used it):</p><pre class="programlisting">msg-create-with-id: http://example.com/queues/jms.queue.bar/create/{id}</pre><p>You see that it is a regular URL appended with a
+      <code class="literal">{id}</code>. This <code class="literal">{id}</code> is a pattern
+      matching substring. A client would generate its
+      <code class="literal">DUPLICATE_DETECTION_ID</code> and replace
+      <code class="literal">{id}</code> with that generated id, then POST to the new
+      URL. The URL the client creates works exactly like a
+      <code class="literal">create-next</code> URL described earlier. The response of
+      this POST would also return a new <code class="literal">msg-create-next</code>
+      header. The client can continue to generate its own
+      DUPLICATE_DETECTION_ID, or use the new URL returned via the
+      <code class="literal">msg-create-nex</code>t header.</p><p>The advantage of this approach is that the client does not have to
+      repost the message. It also only has to come up with a unique
+      <code class="literal">DUPLICATE_DETECTION_ID</code> once.</p></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e426"/>4.2. Persistent Messages</h2></div></div></div><p>By default, posted messages are not durable and will not be
+      persisted in HornetQ's journal. You can create durable messages by
+      modifying the default configuration as expressed in Chapter 2 so that
+      all messages are persisted when sent. Alternatively, you can set a URL
+      query parameter called <code class="literal">durable</code> to true when you post
+      your messages to the URLs returned in the <code class="literal">msg-create</code>,
+      <code class="literal">msg-create-with-id</code>, or
+      <code class="literal">msg-create-next</code> headers. here's an example of
+      that.</p><pre class="programlisting">POST /queues/jms.queue.bar/create?durable=true
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/item&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+</pre></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e445"/>4.3. Expiration and Priority</h2></div></div></div><p>You can set he expiration and the priority of the message in the queue or topic by setting an additional query parameter.  The <code class="literal">expiration</code> query parameter is an integer expressing the time in milliseconds until the message should be expired.  The <code class="literal">priority</code> is another query parameter with an integer value between 0 and 9 expressing the priority of the message. i.e.:</p><pre class="programlisting">POST /queues/jms.queue.bar/create?expiration=30000&amp;priority=3
+Host: example.com
+Content-Type: application/xml
+
+&lt;order&gt;
+   &lt;name&gt;Bill&lt;/name&gt;
+   &lt;item&gt;iPhone4&lt;/item&gt;
+   &lt;cost&gt;$199.99&lt;/cost&gt;
+&lt;/order&gt;
+</pre></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="ch03.html"><strong>Prev</strong>Chapter 3. HornetQ REST Interface Basics</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="ch05.html"><strong>Next</strong>Chapter 5. Consuming Messages via Pull</a></li></ul></body></html>

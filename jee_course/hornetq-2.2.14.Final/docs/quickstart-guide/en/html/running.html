@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 6. Starting The Server</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.74.0"/><link rel="home" href="index.html" title="HornetQ QuickStart Guide"/><link rel="up" href="index.html" title="HornetQ QuickStart Guide"/><link rel="prev" href="installation.html" title="Chapter 5. Installation"/><link rel="next" href="examples.html" title="Chapter 7. Running the Examples"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="installation.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="examples.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="running"/>Chapter 6. Starting The Server</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="running.html#running.standalone">6.1. Standalone HornetQ</a></span></dt><dt><span class="section"><a href="running.html#running.jboss.as5">6.2. HornetQ In JBoss AS 5.x</a></span></dt><dt><span class="section"><a href="running.html#running.jboss.as4">6.3. HornetQ In JBoss AS 4.x</a></span></dt><dt><span class="section"><a href="running.html#running.jboss.as6">6.4. HornetQ In JBoss AS 6.0</a></span></dt></dl></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="running.standalone"/>6.1. Standalone HornetQ</h2></div></div></div><p>To run a stand-alone server, open up a shell or command prompt and navigate into the
+            <code class="literal">bin</code> directory. Then execute <code class="literal">./run.sh</code> (or <code class="literal">run.bat</code> on Windows) and you should see the following output </p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">
+         bin$ ./run.sh
+         
+         15:05:54,108 INFO  @main [HornetQBootstrapServer] Starting HornetQ server
+         ...
+         15:06:02,566 INFO  @main [HornetQServerImpl] HornetQ Server version 
+         2.0.0.CR3 (yellowjacket, 111) started
+      </pre><p>HornetQ is now running.</p><p>Both the run and the stop scripts use the config under <code class="literal">config/stand-alone/non-clustered</code> by default. The configuration can be changed
+         by running <code class="literal">./run.sh ../config/stand-alone/clustered</code> or another config of
+         your choosing. This is the same for the stop script and the windows bat files.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="running.jboss.as5"/>6.2. HornetQ In JBoss AS 5.x</h2></div></div></div><p>To run HornetQ in JBoss AS 5, you need to create the <a class="link" href="installation.html#installation.jboss.as5" title="5.3. HornetQ In JBoss Application Server 5.x">AS 5 profiles for HornetQ</a> first. Then run JBoss
+         AS 5 with one these profiles. For example, to run JBoss AS 5 with a
+            <span class="emphasis"><em>non-clustered</em></span> HornetQ server, got to <code class="literal">$JBOSS_HOME/bin</code> directory and type:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">
+        bin$ ./run.sh -c default-with-hornetq
+        
+        15:18:35,460 INFO  [ServerImpl] Starting JBoss (Microcontainer)...
+        15:18:35,462 INFO  [ServerImpl] Release ID: JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=
+        JBoss_5_1_0_GA date=200905221053)
+        ...
+        15:19:30,305 INFO  [HornetQServerImpl] HornetQ Server version 
+        2.0.0.CR3 (yellowjacket, 111) started
+        ...
+        15:19:43,601 INFO  [ServerImpl] JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=
+        JBoss_5_1_0_GA date=200905221053)]Started in 1m:14s:556ms
+      </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="running.jboss.as4"/>6.3. HornetQ In JBoss AS 4.x</h2></div></div></div><p>To run HornetQ in JBoss AS 4 you must follow the same steps described for AS5 without
+         forgetting to create the <a class="link" href="installation.html#installation.jboss.as4" title="5.4. HornetQ In JBoss Application Server 4.x">AS 4 profiles for
+            HornetQ</a> first. </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="running.jboss.as6"/>6.4. HornetQ In JBoss AS 6.0</h2></div></div></div><p>From JBoss AS 6.0 M3 onwards, HornetQ is the default (built-in) JMS provider in JBoss AS, so there's no need to install it - it's already there.</p></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="installation.html"><strong>Prev</strong>Chapter 5. Installation</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="examples.html"><strong>Next</strong>Chapter 7. Running the Examples</a></li></ul></body></html>

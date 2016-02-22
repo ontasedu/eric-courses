@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="DemosSessionBeans">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="DemosSessionBeans-war.war" deploy-path="/" handle="module:/resource/DemosSessionBeans-war/DemosSessionBeans-war">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DemosSessionBeans-ejb.jar" deploy-path="/" handle="module:/resource/DemosSessionBeans-ejb/DemosSessionBeans-ejb">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DemosSessionBeans-ejbClient.jar" deploy-path="/" handle="module:/resource/DemosSessionBeans-ejbClient/DemosSessionBeans-ejbClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

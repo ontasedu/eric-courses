@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 7. Running the Examples</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.74.0"/><link rel="home" href="index.html" title="HornetQ QuickStart Guide"/><link rel="up" href="index.html" title="HornetQ QuickStart Guide"/><link rel="prev" href="running.html" title="Chapter 6. Starting The Server"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="running.html"><strong>Prev</strong></a></li><li class="next"/></ul><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="examples"/>Chapter 7. Running the Examples</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="examples.html#examples.jms">7.1. The JMS examples</a></span></dt><dt><span class="section"><a href="examples.html#examples.messaging">7.2. The Java EE Examples</a></span></dt></dl></div><p>In the directory <code class="literal">examples</code> there are 2 sets of examples, these are </p><div class="itemizedlist"><ul><li><p>JMS Examples - these demonstrate functionality while sending and consumng JMS
+            messages.</p></li><li><p>Java EE Examples - these demonstrate application server integration, e.g. MDBs, EJBs,
+            Servlets, etc.</p></li></ul></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="examples.jms"/>7.1. The JMS examples</h2></div></div></div><p>The JMS Examples all follow the same format. Each examples is contained in its own
+         directory which contains the following.</p><div class="itemizedlist"><ul><li><p><code class="literal">build.xml</code></p><p>This is the ant build file used to run the example</p></li><li><p><code class="literal">src</code> directory</p><p>This contains the source code for the example</p></li><li><p><code class="literal">server0</code> configuration directory</p><p>This contains the configuration files needed to run the server for the example.
+               There may be multiple configuration directories <code class="literal">server0</code>, <code class="literal">server1</code> etc for clustered examples etc.</p></li></ul></div><p>Each example will start one or more stand-alone servers and stop them after the example
+         has completed.</p><p>As a quick start we'll run the queue example. For all other examples refer to the main
+         user manual.</p><p>Firstly open a Shell or a Command prompt and navigate to the <code class="literal">examples/jms/queue</code> directory.</p><p>Type the command <code class="literal">./build.sh</code> (or <code class="literal">build.bat</code> if you
+         are running on Windows), and you should see the following output:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">Buildfile: build.xml
+
+run:
+
+init:
+
+compile:
+     [echo] src.example.dir=/home/andy/projects/hornetq/trunk/examples/jms/queue/src
+    [javac] Compiling 5 source files to /home/andy/projects/hornetq/trunk/examples/jms/queue
+/build/classes
+
+runExample:
+     [java] 10:41:04,149 INFO  @main [JMSExample] hornetq.example.runServer is true
+     [java] 10:41:04,149 INFO  @main [JMSExample] starting server with config 'server0'
+ logServerOutput true
+     [java] 10:41:04,149 INFO  @main [JMSExample] and vm args: -Xms512M,-Xmx512M,-XX:+U
+seParallelGC,-XX:+AggressiveOpts,-XX:+UseFastAccessorMethods,-Djava.util.logging.config.
+file=/home/andy/projects/hornetq/trunk/examples/jms/common/../../../src/config/stand-alone/no
+n-clustered/logging.properties
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:08,437 INFO  @main [Journal
+StorageManager] AIO journal selected
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:08,437 WARN  @main [Journal
+StorageManager] AIO wasn't located on this platform, it will fall back to using pure Jav
+a NIO. If your platform is Linux, install LibAIO to enable the AIO journal
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:08,437 WARN  @main [Securit
+yStoreImpl] It has been detected that the cluster admin password which is used to replic
+ate management operation from one node to the other has not had its password changed fro
+m the installation default. Please see the HornetQ user guide for instructions o
+n how to do this.
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:10,941 INFO  @main [HornetQCo
+nnectionFactory] read only is false
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:10,941 INFO  @main [HornetQCo
+nnectionFactory] read only is false
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:10,941 INFO  @main [HornetQCo
+nnectionFactory] read only is false
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:10,991 WARN  @main [JMSServ
+erManagerImpl] Binding for java:/ConnectionFactory already exists
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:10,991 WARN  @main [JMSServ
+erManagerImpl] Binding for java:/XAConnectionFactory already exists
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:11,241 INFO  @main [Messagi
+ngServerImpl] HornetQ Server version 2.0.0.BETA5 (buzz-buzz, 107) started
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:10:41:11,241 INFO  @main [HornetQBoot
+strapServer] HornetQ server started
+     [java] org.hornetq.jms.example.SpawnedJMSServer out:STARTED::
+     [java] 10:41:11,276 INFO  @main [JMSExample] using server0/client-jndi.properties f
+or jndi
+     [java] Sent message: This is a text message
+     [java] Received message: This is a text message
+     [java] 
+     [java] #####################
+     [java] ###    SUCCESS!   ###
+     [java] #####################
+
+BUILD SUCCESSFUL
+Total time: 13 seconds
+</pre><p>Congratulations! You have successfully run your first HornetQ example. Try some of the
+         others.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="examples.messaging"/>7.2. The Java EE Examples</h2></div></div></div><p>The Java EE Examples are examples that require a JEE application server to run. They
+         include MDB, Servlet, EJB examples etc. For this you will need the JBoss Application Server
+         installed. How to do this is explained in the previous chapters.</p><p>We'll use the MDB example for the purposes of this guide. For the other examples refer
+         to the user guide. Before going any further ensure that the JBoss Application Server is
+         running.</p><p>Like the other Java EE examples the MDB example is a JEE Application which first needs
+         deploying in the JBoss Application Server. The first thing we need to do is set the
+            <code class="literal">JBOSS_HOME</code> environment property to the location of the JBoss
+         Application Server, in a Linux shell this would be something like:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">export JBOSS_HOME=/home/jbossas5.1/build/output/jboss-5.1.0.GA</pre><p>Once set we can then deploy the application, from inside the <code class="literal">examples/javaee/mdb</code> directory run the command:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">./build.sh deploy</pre><p>This will make a copy of the messaging profile in the JBoss Application server and start
+         the server.</p><p>In the shell window you should see something like the following output:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">Buildfile: build.xml
+
+validate-jboss:
+
+deploy:
+
+deploy-resources:
+     [copy] Copying 1 file to /home/andy/projects/jbossas5.1/build/output/jboss-5.1.0.GA
+     /server/default-with-hornetq/deploy/hornetq.sar
+     [copy] Copying 1 file to /home/andy/projects/jbossas5.1/build/output/jboss-5.1.0.GA
+     /server/default-with-hornetq/deploy/hornetq.sar
+
+init:
+
+compile:
+
+jar:
+      [jar] Building jar: /home/andy/projects/hornetq/trunk/examples/javaee/mdb/build/mdb-exa
+      mple.jar
+
+ear:
+      [jar] Building jar: /home/andy/projects/hornetq/trunk/examples/javaee/mdb/build/mdb-exa
+      mple.ear
+
+deploy-ear:
+     [copy] Copying 1 file to /home/andy/projects/jbossas5.1/build/output/jboss-5.1.0.GA
+
+     .......
+
+
+     [exec] 16:01:04,607 INFO  [JBossASKernel] 	Class:javax.jms.MessageListener
+     [exec] 16:01:04,607 INFO  [JBossASKernel] Added bean(jboss.j2ee:ear=mdb-example.ear,
+     jar=mdb-example.jar,name=MessageMDBExample,service=EJB3) to KernelDeployment of: 
+     mdb-example.jar
+     [exec] 16:01:04,702 INFO  [EJBContainer] STARTED EJB: org.hornetq.javaee.example.server
+     .MDBExample ejbName: MessageMDBExample
+     [exec] 16:01:09,496 INFO  [TomcatDeployment] deploy, ctxPath=/mdb-example
+     [exec] 16:01:09,812 WARNING [config] Unable to process deployment descriptor for cont
+     ext '/mdb-example'
+     [exec] 16:01:09,812 INFO  [config] Initializing Mojarra (1.2_12-b01-FCS) for context 
+     '/mdb-example'
+     [exec] 16:01:09,958 INFO  [Http11Protocol] Starting Coyote HTTP/1.1 on http-127.0.0.1-
+     8080
+     [exec] 16:01:09,990 INFO  [AjpProtocol] Starting Coyote AJP/1.3 on ajp-127.0.0.1-8009
+     [exec] 16:01:10,001 INFO  [ServerImpl] JBoss (Microcontainer) [5.1.0.GA (build: SVNTag
+     =JBoss_5_1_0_GA date=200905151005)] Started in 6m:21s:797ms
+
+</pre><p>We can now run the example, do this by running the following command from within the
+            <code class="literal">mdb</code> directory.</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">./build.sh</pre><p>You should see some output similar to the following:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">Buildfile: build.xml
+
+run:
+
+init:
+
+compile:
+
+runExample:
+     [java] Sent message: This is a text message
+
+BUILD SUCCESSFUL
+Total time: 7 seconds</pre><p>You may also see some output from the JBoss Application Server, in this instance it
+         is:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">16:27:54,703 INFO  [STDOUT] message This is a text message received</pre><p>The application can then be undeployed by running the following command from within the
+            <code class="literal">mdb</code> directory.</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">./build.sh undeploy</pre><p>This should so some output similar to the following:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">Buildfile: build.xml
+
+validate-jboss:
+
+undeploy:
+
+undeploy-misc:
+   [delete] Deleting: /home/andy/projects/jbossas5.1/build/output/jboss-5.1.0.GA
+   /server/default-with-hornetq/deploy/mdb-example.ear
+   [delete] Deleting: /home/andy/projects/jbossas5.1/build/output/jboss-5.1.0.GA
+   /server/default-with-hornetq/deploy/hornetq.sar/hornetq-queues.xml
+   [delete] Deleting: /home/andy/projects/jbossas5.1/build/output/jboss-5.1.0.GA
+   /server/default-with-hornetq/deploy/hornetq.sar/hornetq-jms.xml
+
+BUILD SUCCESSFUL
+Total time: 1 second
+</pre><p>You can verify that the application has been undeployed by checking the output from the
+         JBoss Application Server, in this instance it will be something like:</p><pre xmlns="" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">16:36:45,277 INFO  [EJBContainer] STOPPED EJB: org.jboss.javaee.example.server.MDBExample 
+         ejbName: MessageMDBExample
+</pre><p>Congratulations! you have successfully deployed and run a Java EE example.</p></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="running.html"><strong>Prev</strong>Chapter 6. Starting The Server</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li></ul></body></html>

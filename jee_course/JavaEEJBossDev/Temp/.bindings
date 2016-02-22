@@ -1,0 +1,7 @@
+#This file is used by the JNDI FSContext.
+#Thu Aug 23 05:25:25 BST 2012
+aaa/ClassName=demos.jndi.Bank
+aaa/RefAddr/0/Encoding=String
+aaa/RefAddr/0/Type=Bankname
+aaa/FactoryName=demos.jndi.BankFactory
+aaa/RefAddr/0/Content=bbb

@@ -1,0 +1,7 @@
+org.hornetq.rest
+org.hornetq.rest.integration
+org.hornetq.rest.queue
+org.hornetq.rest.queue.push
+org.hornetq.rest.queue.push.xml
+org.hornetq.rest.topic
+org.hornetq.rest.util

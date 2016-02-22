@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 7. Creating Destinations</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="ch06.html" title="Chapter 6. Pushing Messages"/><link rel="next" href="ch08.html" title="Chapter 8. Securing the HornetQ REST Interface"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="ch06.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="ch08.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e1005"/>Chapter 7. Creating Destinations</h2></div></div></div><p>You can create a durable queue or topic through the REST interface.
+    Currently you cannot create a temporary queue or topic. To create a queue
+    you do a POST to the relative URL /queues with an XML representation of
+    the queue. The XML syntax is the same queue syntax that you would specify
+    in hornetq-jms.xml if you were creating a queue there. For example:</p><pre class="programlisting">POST /queues
+Host: example.com
+Content-Type: application/hornetq.jms.queue+xml
+
+&lt;queue name="testQueue"&gt;
+   &lt;durable&gt;true&lt;/durable&gt;
+&lt;/queue&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/jms.queue.testQueue
+</pre><p>Notice that the Content-Type is
+    application/hornetq.jms.queue+xml.</p><p>Here's what creating a topic would look like:</p><pre class="programlisting">POST /topics
+Host: example.com
+Content-Type: application/hornetq.jms.topic+xml
+
+&lt;topic name="testTopic"&gt;
+&lt;/topic&gt;
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/jms.topic.testTopic</pre></div><ul class="docnav"><li class="previous"><a accesskey="p" href="ch06.html"><strong>Prev</strong>Chapter 6. Pushing Messages</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="ch08.html"><strong>Next</strong>Chapter 8. Securing the HornetQ REST Interface</a></li></ul></body></html>

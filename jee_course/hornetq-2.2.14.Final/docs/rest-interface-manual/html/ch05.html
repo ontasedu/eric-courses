@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 5. Consuming Messages via Pull</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="ch04.html" title="Chapter 4. Posting Messages"/><link rel="next" href="ch06.html" title="Chapter 6. Pushing Messages"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="ch04.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="ch06.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e458"/>Chapter 5. Consuming Messages via Pull</h2></div></div></div><div class="toc"><dl><dt><span class="sect1"><a href="ch05.html#d0e517">5.1. Auto-Acknowledge</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch05.html#d0e547">5.1.1. Creating an Auto-Ack Consumer or Subscription</a></span></dt><dt><span class="sect2"><a href="ch05.html#d0e601">5.1.2. Consuming Messages</a></span></dt><dt><span class="sect2"><a href="ch05.html#d0e637">5.1.3. Recovering From Network Failures</a></span></dt><dt><span class="sect2"><a href="ch05.html#d0e642">5.1.4. Recovering From Client or Server Crashes</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch05.html#d0e651">5.2. Manual Acknowledgement</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch05.html#d0e687">5.2.1. Creating manually-acknowledged consumers or
+        subscriptions</a></span></dt><dt><span class="sect2"><a href="ch05.html#d0e753">5.2.2. Consuming and Acknowledging a Message</a></span></dt><dt><span class="sect2"><a href="ch05.html#d0e799">5.2.3. Recovering From Network Failures</a></span></dt><dt><span class="sect2"><a href="ch05.html#d0e816">5.2.4. Recovering From Client or Server Crashes</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch05.html#d0e844">5.3. Blocking Pulls with Accept-Wait</a></span></dt><dt><span class="sect1"><a href="ch05.html#d0e856">5.4. Clean Up Your Consumers!</a></span></dt></dl></div><p>There are two different ways to consume messages from a topic or
+    queue. You can wait and have the messaging server push them to you, or you
+    can continuously poll the server yourself to see if messages are
+    available. This chapter discusses the latter. Consuming messages via a
+    pull works almost identically for queues and topics with some minor, but
+    important caveats. To start consuming you must create a consumer resource
+    on the server that is dedicated to your client. Now, this pretty much
+    breaks the stateless principal of REST, but after much prototyping, this
+    is the best way to work most effectively with HornetQ through a REST
+    interface.</p><p>You create consumer resources by doing a simple POST to the URL
+    published by the <code class="literal">msg-pull-consumers</code> response header if
+    you're interacting with a queue, the
+    <code class="literal">msg-pull-subscribers</code> response header if you're
+    interacting with a topic. These headers are provided by the main queue or
+    topic resource discussed in Chapter 3. Doing an empty POST to one of these
+    URLs will create a consumer resource that follows an auto-acknowledge
+    protocol and, if you're interacting with a topic, creates a temporty
+    subscription to the topic. If you want to use the acknowledgement protocol
+    and/or create a durable subscription (topics only), then you must use the
+    form parameters (<code class="literal">application/x-www-form-urlencoded</code>)
+    described below.</p><div class="variablelist"><dl><dt><span class="term">autoAck</span></dt><dd><p>A value of <code class="literal">true</code> or <code class="literal">false</code>
+          can be given. This defaults to <code class="literal">true</code> if you do not
+          pass this parameter.</p></dd><dt><span class="term">durable</span></dt><dd><p>A value of <code class="literal">true</code> or <code class="literal">false</code>
+          can be given. This defaults to <code class="literal">false</code> if you do
+          not pass this parameter. Only available on topics. This specifies
+          whether you want a durable subscription or not. A durable
+          subscription persists through server restart.</p></dd><dt><span class="term">name</span></dt><dd><p>This is the name of the durable subscription. If you do not
+          provide this parameter, the name will be automatically generated by
+          the server. Only usable on topics.</p></dd><dt><span class="term">selector</span></dt><dd><p>This is an optional JMS selector string. The HornetQ REST
+          interface adds HTTP headers to the JMS message for REST produced
+          messages. HTTP headers are prefixed with "http_" and every '-'
+          charactor is converted to a '$'.</p></dd></dl></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e517"/>5.1. Auto-Acknowledge</h2></div></div></div><p>This section focuses on the auto-acknowledge protocol for
+      consuming messages via a pull. Here's a list of the response headers and
+      URLs you'll be interested in.</p><div class="variablelist"><dl><dt><span class="term">msg-pull-consumers</span></dt><dd><p>The URL of a factory resource for creating queue consumer
+            resources. You will pull from these created resources.</p></dd><dt><span class="term">msg-pull-subscriptions</span></dt><dd><p>The URL of a factory resource for creating topic
+            subscription resources. You will pull from the created
+            resources.</p></dd><dt><span class="term">msg-consume-next</span></dt><dd><p>The URL you will pull the next message from. This is
+            returned with every response.</p></dd><dt><span class="term">msg-consumer</span></dt><dd><p>This is a URL pointing back to the consumer or subscription
+            resource created for the client.</p></dd></dl></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e547"/>5.1.1. Creating an Auto-Ack Consumer or Subscription</h3></div></div></div><p>Here is an example of creating an auto-acknowledged queue pull
+        consumer.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Find the pull-consumers URL by doing a HEAD or GET request
+            to the base queue resource.</p><pre class="programlisting">HEAD /queues/jms.queue.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/jms.queue.bar/create
+msg-pull-consumers: http://example.com/queues/jms.queue.bar/pull-consumers
+msg-push-consumers: http://example.com/queues/jms.queue.bar/push-consumers
+</pre></li><li><p>Next do an empty POST to the URL returned in the
+            <code class="literal">msg-pull-consumers</code> header.</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers HTTP/1.1
+Host: example.com
+
+--- response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/jms.queue.bar/pull-consumers/auto-ack/333
+msg-consume-next: http://example.com/queues/jms.queue.bar/pull-consumers/auto-ack/333/consume-next-1
+</pre><p>The <code class="literal">Location</code> header points to the JMS
+            consumer resource that was created on the server. It is good to
+            remember this URL, although, as you'll see later, it is
+            transmitted with each response just to remind you.</p></li></ol></div><p>Creating an auto-acknowledged consumer for a topic is pretty
+        much the same. Here's an example of creating a durable
+        auto-acknowledged topic pull subscription.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Find the <code class="literal">pull-subscriptions</code> URL by doing
+            a HEAD or GET request to the base topic resource</p><pre class="programlisting">HEAD /topics/jms.topic.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/topics/jms.topic.foo/create
+msg-pull-subscriptions: http://example.com/topics/jms.topic.foo/pull-subscriptions
+msg-push-subscriptions: http://example.com/topics/jms.topic.foo/push-subscriptions
+</pre></li><li><p>Next do a POST to the URL returned in the
+            <code class="literal">msg-pull-subscriptions</code> header passing in a
+            <code class="literal">true</code> value for the <code class="literal">durable</code>
+            form parameter.</p><pre class="programlisting">POST /topics/jms.topic.foo/pull-subscriptions HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+durable=true
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/jms.topic.foo/pull-subscriptions/auto-ack/222
+msg-consume-next: http://example.com/topics/jms.topic.foo/pull-subscriptions/auto-ack/222/consume-next-1
+</pre><p>The <code class="literal">Location</code> header points to the JMS
+            subscription resource that was created on the server. It is good
+            to remember this URL, although, as you'll see later, it is
+            transmitted with each response just to remind you.</p></li></ol></div></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e601"/>5.1.2. Consuming Messages</h3></div></div></div><p>After you have created a consumer resource, you are ready to
+        start pulling messages from the server. Notice that when you created
+        the consumer for either the queue or topic, the response contained a
+        <code class="literal">msg-consume-next</code> response header. POST to the URL
+        contained within this header to consume the next message in the queue
+        or topic subscription. A successful POST causes the server to extract
+        a message from the queue or topic subscription, acknowledge it, and
+        return it to the consuming client. If there are no messages in the
+        queue or topic subscription, a 503 (Service Unavailable) HTTP code is
+        returned.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="warning"><h2>Warning</h2><p>For both successful and unsuccessful posts to the
+          msg-consume-next URL, the response will contain a new
+          msg-consume-next header. You must ALWAYS use this new URL returned
+          within the new msg-consume-next header to consume new
+          messages.</p></div><p>Here's an example of pulling multiple messages from the consumer
+        resource.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Do a POST on the msg-consume-next URL that was returned with
+            the consumer or subscription resource discussed earlier.</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers/consume-next-1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-consume-next: http://example.com/queues/jms.queue.bar/pull-consumers/333/consume-next-2
+msg-consumer: http://example.com/queues/jms.queue.bar/pull-consumers/333
+
+&lt;order&gt;...&lt;/order&gt;
+</pre><p>The POST returns the message consumed from the queue. It
+            also returns a new msg-consume-next link. Use this new link to get
+            the next message. Notice also a msg-consumer response header is
+            returned. This is a URL that points back to the consumer or
+            subscription resource. You will need that to clean up your
+            connection after you are finished using the queue or topic.</p></li><li><p>The POST returns the message consumed from the queue. It
+            also returns a new msg-consume-next link. Use this new link to get
+            the next message.</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers/consume-next-2
+Host: example.com
+
+--- Response ---
+Http/1.1 503 Service Unavailable
+Retry-After: 5
+msg-consume-next: http://example.com/queues/jms.queue.bar/pull-consumers/333/consume-next-2
+</pre><p>In this case, there are no messages in the queue, so we get
+            a 503 response back. As per the HTTP 1.1 spec, a 503 response may
+            return a Retry-After head specifying the time in seconds that you
+            should retry a post. Also notice, that another new
+            msg-consume-next URL is present. Although it probabley is the same
+            URL you used last post, get in the habit of using URLs returned in
+            response headers as future versions of HornetQ REST might be
+            redirecting you or adding additional data to the URL after
+            timeouts like this.</p></li><li><p>POST to the URL within the last
+            <code class="literal">msg-consume-next</code> to get the next
+            message.</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers/consume-next-2
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-consume-next: http://example.com/queues/jms.queue.bar/pull-consumers/333/consume-next-3
+
+&lt;order&gt;...&lt;/order&gt;</pre></li></ol></div></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e637"/>5.1.3. Recovering From Network Failures</h3></div></div></div><p>If you experience a network failure and do not know if your post
+        to a msg-consume-next URL was successful or not, just re-do your POST.
+        A POST to a msg-consume-next URL is idempotent, meaning that it will
+        return the same result if you execute on any one msg-consume-next URL
+        more than once. Behind the scenes, the consumer resource caches the
+        last consumed message so that if there is a message failure and you do
+        a re-post, the cached last message will be returned (along with a new
+        msg-consume-next URL). This is the reason why the protocol always
+        requires you to use the next new msg-consume-next URL returned with
+        each response. Information about what state the client is in is
+        embedded within the actual URL.</p></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e642"/>5.1.4. Recovering From Client or Server Crashes</h3></div></div></div><p>If the server crashes and you do a POST to the msg-consume-next
+        URL, the server will return a 412 (Preconditions Failed) response
+        code. This is telling you that the URL you are using is out of sync
+        with the server. The response will contain a new msg-consume-next
+        header to invoke on.</p><p>If the client crashes there are multiple ways you can recover.
+        If you have remembered the last msg-consume-next link, you can just
+        re-POST to it. If you have remembered the consumer resource URL, you
+        can do a GET or HEAD request to obtain a new msg-consume-next URL. If
+        you have created a topic subscription using the name parameter
+        discussed earlier, you can re-create the consumer. Re-creation will
+        return a msg-consume-next URL you can use. If you cannot do any of
+        these things, you will have to create a new consumer.</p><p>The problem with the auto-acknowledge protocol is that if the
+        client or server crashes, it is possible for you to skip messages. The
+        scenario would happen if the server crashes after auto-acknowledging a
+        message and before the client receives the message. If you want more
+        reliable messaging, then you must use the acknowledgement
+        protocol.</p></div></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e651"/>5.2. Manual Acknowledgement</h2></div></div></div><p>The manual acknowledgement protocol is similar to the auto-ack
+      protocol except there is an additional round trip to the server to tell
+      it that you have received the message and that the server can internally
+      ack the message. Here is a list of the respone headers you will be
+      interested in.</p><div class="variablelist"><dl><dt><span class="term">msg-pull-consumers</span></dt><dd><p>The URL of a factory resource for creating queue consumer
+            resources. You will pull from these created resources</p></dd><dt><span class="term">msg-pull-subscriptions</span></dt><dd><p>The URL of a factory resource for creating topic
+            subscription resources. You will pull from the created
+            resources.</p></dd><dt><span class="term">msg-acknowledge-next</span></dt><dd><p>URL used to obtain the next message in the queue or topic
+            subscription. It does not acknowledge the message though.</p></dd><dt><span class="term">msg-acknowledgement</span></dt><dd><p>URL used to acknowledge a message.</p></dd><dt><span class="term">msg-consumer</span></dt><dd><p>This is a URL pointing back to the consumer or subscription
+            resource created for the client.</p></dd></dl></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e687"/>5.2.1. Creating manually-acknowledged consumers or
+        subscriptions</h3></div></div></div><p>Here is an example of creating an auto-acknowledged queue pull
+        consumer.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Find the pull-consumers URL by doing a HEAD or GET request
+            to the base queue resource.</p><pre class="programlisting">HEAD /queues/jms.queue.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/queues/jms.queue.bar/create
+msg-pull-consumers: http://example.com/queues/jms.queue.bar/pull-consumers
+msg-push-consumers: http://example.com/queues/jms.queue.bar/push-consumers
+</pre></li><li><p>Next do a POST to the URL returned in the
+            <code class="literal">msg-pull-consumers</code> header passing in a
+            <code class="literal">false</code> value to the <code class="literal">autoAck</code>
+            form parameter .</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+autoAck=false
+
+--- response ---
+HTTP/1.1 201 Created
+Location: http://example.com/queues/jms.queue.bar/pull-consumers/acknowledged/333
+msg-acknowledge-next: http://example.com/queues/jms.queue.bar/pull-consumers/acknowledged/333/acknowledge-next-1
+</pre><p>The <code class="literal">Location</code> header points to the JMS
+            consumer resource that was created on the server. It is good to
+            remember this URL, although, as you'll see later, it is
+            transmitted with each response just to remind you.</p></li></ol></div><p>Creating an manually-acknowledged consumer for a topic is pretty
+        much the same. Here's an example of creating a durable
+        manually-acknowledged topic pull subscription.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Find the <code class="literal">pull-subscriptions</code> URL by doing
+            a HEAD or GET request to the base topic resource</p><pre class="programlisting">HEAD /topics/jms.topic.bar HTTP/1.1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+msg-create: http://example.com/topics/jms.topic.foo/create
+msg-pull-subscriptions: http://example.com/topics/jms.topic.foo/pull-subscriptions
+msg-push-subscriptions: http://example.com/topics/jms.topic.foo/push-subscriptions
+</pre></li><li><p>Next do a POST to the URL returned in the
+            <code class="literal">msg-pull-subscriptions</code> header passing in a
+            <code class="literal">true</code> value for the <code class="literal">durable</code>
+            form parameter and a <code class="literal">false</code> value to the
+            <code class="literal">autoAck</code> form parameter.</p><pre class="programlisting">POST /topics/jms.topic.foo/pull-subscriptions HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+durable=true&amp;autoAck=false
+
+--- Response ---
+HTTP/1.1 201 Created
+Location: http://example.com/topics/jms.topic.foo/pull-subscriptions/acknowledged/222
+msg-acknowledge-next: http://example.com/topics/jms.topic.foo/pull-subscriptions/acknowledged/222/consume-next-1
+</pre><p>The <code class="literal">Location</code> header points to the JMS
+            subscription resource that was created on the server. It is good
+            to remember this URL, although, as you'll see later, it is
+            transmitted with each response just to remind you.</p></li></ol></div></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e753"/>5.2.2. Consuming and Acknowledging a Message</h3></div></div></div><p>After you have created a consumer resource, you are ready to
+        start pulling messages from the server. Notice that when you created
+        the consumer for either the queue or topic, the response contained a
+        <code class="literal">msg-acknowledge-next</code> response header. POST to the
+        URL contained within this header to consume the next message in the
+        queue or topic subscription. If there are no messages in the queue or
+        topic subscription, a 503 (Service Unavailable) HTTP code is returned.
+        A successful POST causes the server to extract a message from the
+        queue or topic subscription and return it to the consuming client. It
+        does not acknowledge the message though. The response will contain the
+        <code class="literal">acknowledgement</code> header which you will use to
+        acknowledge the message.</p><p>Here's an example of pulling multiple messages from the consumer
+        resource.</p><div xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="orderedlist"><ol><li><p>Do a POST on the msg-acknowledge-next URL that was returned
+            with the consumer or subscription resource discussed
+            earlier.</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers/consume-next-1
+Host: example.com
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-acknowledgement: http://example.com/queues/jms.queue.bar/pull-consumers/333/acknowledgement/2
+msg-consumer: http://example.com/queues/jms.queue.bar/pull-consumers/333
+
+&lt;order&gt;...&lt;/order&gt;
+</pre><p>The POST returns the message consumed from the queue. It
+            also returns a <code class="literal">msg-acknowledgemen</code>t link. You
+            will use this new link to acknowledge the message. Notice also a
+            <code class="literal">msg-consumer</code> response header is returned. This
+            is a URL that points back to the consumer or subscription
+            resource. You will need that to clean up your connection after you
+            are finished using the queue or topic.</p></li><li><p>Acknowledge or unacknowledge the message by doing a POST to
+            the URL contained in the <code class="literal">msg-acknowledgement</code>
+            header. You must pass an <code class="literal">acknowledge</code> form
+            parameter set to <code class="literal">true</code> or
+            <code class="literal">false</code> depending on whether you want to
+            acknowledge or unacknowledge the message on the server.</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers/acknowledgement/2
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+acknowledge=true
+
+--- Response ---
+Http/1.1 200 Ok
+msg-acknowledge-next: http://example.com/queues/jms.queue.bar/pull-consumers/333/acknowledge-next-2
+</pre><p>Whether you acknowledge or unacknowledge the message, the
+            response will contain a new msg-acknowledge-next header that you
+            must use to obtain the next message.</p></li></ol></div></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e799"/>5.2.3. Recovering From Network Failures</h3></div></div></div><p>If you experience a network failure and do not know if your post
+        to a <code class="literal">msg-acknowledge-next</code> or
+        <code class="literal">msg-acknowledgement</code> URL was successful or not, just
+        re-do your POST. A POST to one of these URLs is idempotent, meaning
+        that it will return the same result if you re-post. Behind the scenes,
+        the consumer resource keeps track of its current state. If the last
+        action was a call to <code class="literal">msg-acknowledge-next</code>, it will
+        have the last message cached, so that if a re-post is done, it will
+        return the message again. Same goes with re-posting to
+        <code class="literal">msg-acknowledgement</code>. The server remembers its last
+        state and will return the same results. If you look at the URLs you'll
+        see that they contain information about the expected current state of
+        the server. This is how the server knows what the client is
+        expecting.</p></div><div class="sect2" lang="en-US"><div class="titlepage"><div><div><h3 class="title"><a id="d0e816"/>5.2.4. Recovering From Client or Server Crashes</h3></div></div></div><p>If the server crashes and while you are doing a POST to the
+        <code class="literal">msg-acknowledge-next</code> URL, just re-post. Everything
+        should reconnect all right. On the other hand, if the server crashes
+        while you are doing a POST to <code class="literal">msg-acknowledgement</code>,
+        the server will return a 412 (Preconditions Failed) response code.
+        This is telling you that the URL you are using is out of sync with the
+        server and the message you are acknowledging was probably re-enqueued.
+        The response will contain a new
+        <code class="literal">msg-acknowledge-next</code> header to invoke on.</p><p>As long as you have "bookmarked" the consumer resource URL
+        (returned from <code class="literal">Location</code> header on a create, or the
+        <code class="literal">msg-consumer</code> header), you can recover from client
+        crashes by doing a GET or HEAD request on the consumer resource to
+        obtain what state you are in. If the consumer resource is expecting
+        you to acknowledge a message, it will return a
+        <code class="literal">msg-acknowledgement</code> header in the response. If the
+        consumer resource is expecting you to pull for the next message, the
+        <code class="literal">msg-acknowledge-next</code> header will be in the
+        response. With manual acknowledgement you are pretty much guaranteed
+        to avoid skipped messages. For topic subscriptions that were created
+        with a name parameter, you do not have to "bookmark" the returned URL.
+        Instead, you can re-create the consumer resource with the same exact
+        name. The response will contain the same information as if you did a
+        GET or HEAD request on the consumer resource.</p></div></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e844"/>5.3. Blocking Pulls with Accept-Wait</h2></div></div></div><p>Unless your queue or topic has a high rate of message flowing
+      though it, if you use the pull protocol, you're going to be receiving a
+      lot of 503 responses as you continuously pull the server for new
+      messages. To alleviate this problem, the HornetQ REST interface provides
+      the <code class="literal">Accept-Wait</code> header. This is a generic HTTP
+      request header that is a hint to the server for how long the client is
+      willing to wait for a response from the server. The value of this header
+      is the time in seconds the client is willing to block for. You would
+      send this request header with your pull requests. Here's an
+      example:</p><pre class="programlisting">POST /queues/jms.queue.bar/pull-consumers/consume-next-2
+Host: example.com
+Accept-Wait: 30
+
+--- Response ---
+HTTP/1.1 200 Ok
+Content-Type: application/xml
+msg-consume-next: http://example.com/queues/jms.queue.bar/pull-consumers/333/consume-next-3
+
+&lt;order&gt;...&lt;/order&gt;</pre><p>In this example, we're posting to a msg-consume-next URL and
+      telling the server that we would be willing to block for 30
+      seconds.</p></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e856"/>5.4. Clean Up Your Consumers!</h2></div></div></div><p>When the client is done with its consumer or topic subscription it
+      should do an HTTP DELETE call on the consumer URL passed back from the
+      Location header or the msg-consumer response header. The server will
+      time out a consumer with the value configured from Chapter 2.3, so you
+      don't have to clean up if you dont' want to, but if you are a good kid,
+      you will clean up your messes. A consumer timeout for durable
+      subscriptions will not delete the underlying durable JMS subscription
+      though, only the server-side consumer resource (and underlying JMS
+      session).</p></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="ch04.html"><strong>Prev</strong>Chapter 4. Posting Messages</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="ch06.html"><strong>Next</strong>Chapter 6. Pushing Messages</a></li></ul></body></html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="SolutionsEntitiesAndSessionBeans">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="SolutionsEntitiesAndSessionBeans-ejb.jar" deploy-path="/" handle="module:/resource/SolutionsEntitiesAndSessionBeans-ejb/SolutionsEntitiesAndSessionBeans-ejb">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SolutionsEntitiesAndSessionBeans-ejbClient.jar" deploy-path="/" handle="module:/resource/SolutionsEntitiesAndSessionBeans-ejbClient/SolutionsEntitiesAndSessionBeans-ejbClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SolutionsEntitiesAndSessionBeans-web.war" deploy-path="/" handle="module:/resource/SolutionsEntitiesAndSessionBeans-web/SolutionsEntitiesAndSessionBeans-web">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="SolutionsEntitiesAndSessionBeans-jpa.jar" deploy-path="/lib" handle="module:/resource/SolutionsEntitiesAndSessionBeans-jpa/SolutionsEntitiesAndSessionBeans-jpa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

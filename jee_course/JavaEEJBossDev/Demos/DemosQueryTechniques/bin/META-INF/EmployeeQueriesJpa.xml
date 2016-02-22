@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="1.0"
+	xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_1_0_xsd">
+
+	<named-query name="getEmployeesInSalaryRangeJpa">
+		<query>
+			<![CDATA[from Employee e where e.salary between ?1 and ?2 order by e.salary]]> 
+		</query>
+	</named-query>
+
+</entity-mappings>
+

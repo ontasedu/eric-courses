@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 9. Mixing JMS and REST</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL Stylesheets V1.72.0"/><link rel="start" href="index.html" title="HornetQ REST Interface"/><link rel="up" href="index.html" title="HornetQ REST Interface"/><link rel="prev" href="ch08.html" title="Chapter 8. Securing the HornetQ REST Interface"/></head><body><p id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul class="docnav"><li class="previous"><a accesskey="p" href="ch08.html"><strong>Prev</strong></a></li><li class="next"/></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e1086"/>Chapter 9. Mixing JMS and REST</h2></div></div></div><div class="toc"><dl><dt><span class="sect1"><a href="ch09.html#d0e1091">9.1. JMS Producers - REST Consumers</a></span></dt><dt><span class="sect1"><a href="ch09.html#d0e1100">9.2. REST Producers - JMS Consumers</a></span></dt></dl></div><p>The HornetQ REST interface supports mixing JMS and REST producres
+    and consumers. You can send an ObjectMessage through a JMS Producer, and
+    have a REST client consume it. You can have a REST client POST a message
+    to a topic and have a JMS Consumer receive it. Some simple transformations
+    are supported if you have the correct RESTEasy providers installed.</p><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e1091"/>9.1. JMS Producers - REST Consumers</h2></div></div></div><p>If you have a JMS producer, the HornetQ REST interface only
+      supports ObjectMessage type. If the JMS producer is aware that there may
+      be REST consumers, it should set a JMS property to specify what
+      Content-Type the Java object should be translated into by REST clients.
+      The HornetQ REST server will use RESTEasy content handlers
+      (MessageBodyReader/Writers) to transform the Java object to the type
+      desired. Here's an example of a JMS producer setting the content type of
+      the message.</p><pre class="programlisting">ObjectMessage message = session.createObjectMessage();
+message.setStringProperty(org.hornetq.rest.HttpHeaderProperty.CONTENT_TYPE, "application/xml");
+</pre><p>If the JMS producer does not set the content-type, then this
+      information must be obtained from the REST consumer. If it is a pull
+      consumer, then the REST client should send an Accept header with the
+      desired media types it wants to convert the Java object into. If the
+      REST client is a push registration, then the type attribute of the link
+      element of the push registration should be set to the desired
+      type.</p></div><div class="sect1" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="d0e1100"/>9.2. REST Producers - JMS Consumers</h2></div></div></div><p>If you have a REST client producing messages and a JMS consumer,
+      HornetQ REST has a simple helper class for you to transform the HTTP
+      body to a Java object. Here's some example code:</p><pre class="programlisting">public void onMessage(Message message)
+{
+   MyType obj = org.hornetq.rest.Jms.getEntity(message, MyType.class);
+}
+</pre><p>The way the <code class="literal">getEntity()</code> method works is that if
+      the message is an ObjectMessage, it will try to extract the desired type
+      from it like any other JMS message. If a REST producer sent the message,
+      then the method uses RESTEasy to convert the HTTP body to the Java
+      object you want. See the Javadoc of this class for more helper
+      methods.</p></div></div><ul class="docnav"><li class="previous"><a accesskey="p" href="ch08.html"><strong>Prev</strong>Chapter 8. Securing the HornetQ REST Interface</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li></ul></body></html>
