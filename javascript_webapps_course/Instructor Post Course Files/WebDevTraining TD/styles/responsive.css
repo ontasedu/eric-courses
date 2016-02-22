@@ -1,0 +1,32 @@
+/* styles for responsive web design */
+#main {background-color: teal;
+        width : 100%;
+        height: 100%;}
+@media screen and (max-width:320px){
+#green {background-color: green;
+        position:absolute;
+        width : 100%;
+        height: 50%;}
+
+#yellow {background-color: yellow;
+        top : 50%;
+        position: absolute;
+        width : 100%;
+        height: 50%;}
+}
+/* the next media query is for 320-740px */
+@media screen and (min-width:321px) and (max-width:750px){
+#green {background-color: chartreuse;
+        position:absolute;
+        width : 50%;
+        height: 100%;}
+
+#yellow {background-color: palegoldenrod;
+        position: absolute;
+        left:50%;
+        width : 50%;
+        height: 100%;}
+}
+
+
+

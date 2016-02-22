@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    
+        <link rel="stylesheet" type"text/css" href="review1.css" />
+    </head>
+    <script>
+        window.onload = function(){    
+        // assign event listeners
+        btnPress.addEventListener('click', handleClick);
+        // event handler call-backs
+        function handleClick(){
+            console.log('the button was clicked');
+        }
+    }
+    
+    </script>
+<body>
+
+<p>This is a paragraph.</p>
+<p>This is a paragraph.</p>
+<p>This is a paragraph.</p>
+<form>
+    <table>
+        <tr><td> age:</td> <td><input type="number" required/></td></tr>
+    <tr><td> email: <td><input type="email" required /></td></tr>
+    <tr><td><input type="reset" value="clear" /></td>
+    <td><input type="button" value="press" id="btnPress" /><input id="submit" type="submit" value="send"></td></tr>    
+    </table>
+</form>
+
+</body>
+</html>

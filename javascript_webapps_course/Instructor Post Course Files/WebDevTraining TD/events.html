@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Handling Events</title>    
+<link rel="stylesheet" type="text/css" href="" />
+<script>
+// wait for the page to load    
+window.onload = init;
+function init(){
+// pageID.addEventListener('click', function(){alert('page event');});
+// assign and event listener to the button
+var btnAgree = document.getElementById('btnAgree');
+    btnAgree.addEventListener('click', doStuff,false); // false means don't use capture
+// event call-back handler
+    function doStuff(){
+    // remove the button's event listener
+    btnAgree.removeEventListener('click', doStuff,false);
+    // remove the agreement content
+document.getElementsByTagName('body')[0].innerHTML = "Thank you.";
+    };
+}; // end of page load event handler
+</script>
+</head>
+<body id="pageID">
+    Please agree to our cookie policy
+    <input type="button" value="Agree"  id="btnAgree"/>
+</body>
+</html>
+
+
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>JQuery</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <script src="jquery-1.9.1.min.js"></script>
+    <style>
+        img{float:left; width:20%; height:20%;}
+    
+    </style>
+    <script>
+        $(function(){
+        // configure an AJAX call
+            var url = "photos.xml"
+            var method = "get";
+            var timeout = 3000;
+            
+            $.ajax(url, {method:method, 
+                         timeout:timeout,
+                        success:handleSuccess,
+                        error:handleError,
+                        complete:handleComplete});
+                //handle success
+                function handleSuccess(data){
+                    var folder = "gallery/";
+                    var ext = ".jpg";
+                    console.log(data);
+                    $(data).find("image").each(function () {
+                        var desc = $(this).find("desc");
+                        console.log(desc);
+                        // 
+                        var elem = '<img class="reg" src="' + folder + $(this).attr("filename") + ext + '" title="'+ desc[0].innerHTML + " by "+ $(this).attr("photographer") + '" alt="'+ $(this).attr("category") + '" />';
+                        $("#main").append(elem);
+
+                 });
+ 
+                }
+                //handle errors
+                function handleError(error){
+                    console.log(error);
+                }
+                //handle complete
+                function handleComplete(){
+                    $("img").click(function() {
+                        $("#dialog" ).append($( this ));
+                        $("#dialog").dialog();
+                    });
+                }
+            
+            
+        });
+    </script>
+</head>
+
+<body>
+</body>
+    <div id="main">
+    <div id="dialog" title="Basic dialog"><p>hi</p></div>
+    </div>
+</htmL>

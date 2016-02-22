@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>JQuery</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <style>
+        img{float:left; width:20%; height:20%;}
+    
+    </style>
+    <script>
+        
+        
+        window.onload = function() {
+            frmSearch.addEventListener('click', doSearch);
+            var myURL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=";
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('get',myURL);
+            
+            xhr.onreadystatechange = function(){
+                console.log(xhr.status);
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    console.log(xhr.response);
+                    var obj = JSON.parse(xhr.response);
+                    console.log(obj);
+                    
+                    console.log(obj.responseData.results[0].title);
+                    
+                    for(i=0; i<obj.responseData.results.length; i++){
+                        var title = obj.responseData.results[i].title;
+                        var alt = obj.responseData.results[i].content;
+                        var url = obj.responseData.results[i].url;
+                        
+                        //create image
+                        var newImage = document.createElement('img');
+                        newImage.setAttribute('src',url);
+                        newImage.setAttribute('alt',alt);
+                        newImage.setAttribute('title',title);
+                        main.appendChild(newImage);
+                    }
+                }
+            
+            }
+            
+            
+            //call-back handlers
+            function doSearch(){
+                event.preventDefault();
+                var searchTerm = frmSearchTerm.value;
+                myURL+=searchTerm;
+                
+                // make the call
+                xhr.send();
+            }//end of doSearch
+        }
+    </script>
+</head>
+
+<body>
+</body>
+    <div id="main">
+    <form>
+        <input type="text" id="frmSearchTerm" placeholder="search" required /><br />
+        <input type="submit" id="frmSearch" value="search" />
+    </form>
+    
+    </div>
+</htmL>

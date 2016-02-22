@@ -1,0 +1,51 @@
+@CHARSET "ISO-8859-1";
+/* Tag styles */
+img {float:right;}
+/* tag polyfill for IE6 */
+article, nav, header, footer, aside, section {display:block;}
+/* Class styles */
+.floatLeft {float:left;}
+.floatRight{float:right;}
+/* ID styles */
+/* main navigation styles: remove the bullet, float left, display block, draw pretty lines */
+#mainNav ul {
+	padding-left:0px;
+	list-style: none;
+	display: block;
+	width:320px; /* large enough for all the nav elements */
+	height:32px;
+}
+#mainNav li {
+	width: 80px; /* large enough for the hyperlink text */
+	float:left;
+	border: 1px solid teal;
+	border-left: 0px;	
+	background-color: #ffffdd;
+	text-align: center;
+}
+#mainNav li:first-child {
+	border-left: 1px solid teal;
+}
+#mainNav li:hover {
+	background-color: #ddffdd;
+}	
+#mainNav a {
+	text-decoration: none;
+	color: #000022;
+	padding:0px 12px; /* this makes the hyperlink hover work all across the li  */
+}
+#mainNav a:hover{
+	text-decoration: underline;
+}
+
+/* Media Queries */
+@media screen and (max-width:299px) {
+#mainNav {background-color:#3399ff;
+		  width			  :180px;
+		  height		  :64px;}
+} /* end of @media <300 */
+@media screen and (min-width:300px) {
+#mainNav {background-color:#ff9933;
+		  width			  :300px;
+		  height		  :64px;}
+} /* end of @media >300 */

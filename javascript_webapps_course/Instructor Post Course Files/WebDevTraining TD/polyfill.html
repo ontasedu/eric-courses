@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fixing older browsers</title>    
+<link rel="stylesheet" type="text/css" href="" />
+<style>
+/*  tell the older browsers to display semantic tags as blocks */
+article, section, aside, nav, header, footer, athlone {display:block;}
+</style>
+<script>
+// tell older browsers to instantiate semantic tags
+document.createElement('article');
+document.createElement('section');
+document.createElement('aside');
+document.createElement('nav');
+document.createElement('header');
+document.createElement('footer');
+    document.createElement('athlone');
+</script>
+</head>
+<body>
+    <article>Here is an article
+        <section>This is a section
+            <aside>...and an aside</aside>
+        and now, <athlone>this is a custom tag</athlone>
+        </section>
+    </article>
+</body>
+</html>
+

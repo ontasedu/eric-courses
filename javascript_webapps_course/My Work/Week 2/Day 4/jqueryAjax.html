@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>JQuery</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <script src="jquery-1.9.1.min.js"></script>
+    <script>
+        $(function(){
+        // configure an AJAX call
+            var url = "categories.xml"
+            var method = "get";
+            var timeout = 3000;
+            
+            $.ajax(url, {method:method, 
+                         timeout:timeout,
+                        success:handleSuccess,
+                        error:handleError,
+                        complete:handleComplete});
+                //handle success
+                function handleSuccess(data){
+                    console.log(data);
+                }
+                //handle errors
+                function handleError(error){
+                    console.log(error);
+                }
+                //handle complete
+                function handleComplete(){
+                    
+                }
+        });
+    </script>
+</head>
+
+<body>
+</body>
+    <div id="main">
+    
+    </div>
+</htmL>

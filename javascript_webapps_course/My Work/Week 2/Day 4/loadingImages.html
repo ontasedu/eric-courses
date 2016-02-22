@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>loading dynamic images</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <style>
+        img{float:left; width:20%; height:20%;}
+    
+    </style>
+    <script>
+        // declare a  variable for the image location
+        var location1 = 'data/gallery';
+        
+        var filename = 'animal03';
+        
+        location1 += filename + '.jpg';
+        
+        console.log(location);
+            
+        window.onload = function(){
+          // create new image element
+            var newImage = document.createElement('img');
+            //give the image some attributes
+            newImage.setAttribute('src','a_frog.jpg');
+            newImage.setAttribute('alt','Alternative text');
+            newImage.setAttribute('title', 'title text');
+            
+            // add the image to the page
+            main.appendChild(newImage);
+            
+        }
+    </script>
+</head>
+
+<body>
+</body>
+    <div id="main"></div>
+</htmL>

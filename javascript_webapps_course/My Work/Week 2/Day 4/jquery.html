@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>JQuery</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <script src="jquery-1.9.1.min.js"></script>
+    <script>
+        //wait for page to load
+        $(function(){
+            //select something
+            $('p').fadeOut(2000).fadeIn(1500);
+            
+            var newEl = $('<input>');
+            newEl.attr('type', 'button');
+            newEl.attr('value', 'click me');
+            
+            // add event listener to the new button
+            newEl.on('click', doStuff);
+            
+            // place it on the page
+            $('#main').append(newEl);
+            
+            // handle the event
+            function doStuff(){
+                $('#main').off('click', doStuff);
+                $('#main').fadeOut(700);
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="main">
+        <p>Welcome to my Jquery page</p>
+        <p>jquery uses css syntax selectors</p>
+        <p>jQuery makes javascript easy</p>
+    </div>
+    
+</body>
+
+</htmL>

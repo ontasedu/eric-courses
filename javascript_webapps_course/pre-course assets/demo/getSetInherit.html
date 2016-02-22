@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Get Set and Inheritance</title>
+		<script>
+		
+		var food = Object.create(null);
+		food.calorificAverage = 1000;
+		Object.defineProperty(food, 'calories', { // same as food.calories
+			get: function() {return this.calorificAverage},
+			set: function(c) {this.calorificAverage = c}
+		})
+ 
+		food.calorificAverage = 500; 
+		
+		var burger = Object.create(food);
+		burger.calories = 20000;
+		console.log(burger.calories);
+		
+		
+		
+		</script>
+	</head>
+	<body>
+		
+	</body>
+</html>

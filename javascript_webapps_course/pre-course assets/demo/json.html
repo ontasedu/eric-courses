@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Consuming JSON (requires that web security is turned off in the browser)</title>
+	<script src="scripts/json.js"></script>
+    <style>
+    img {width:20%;float:left;}    
+    </style>
+	</head>
+	<body>
+		<div id="formContainer">
+			<form id="frmJSON" method="get" action="#">
+			search term: <input type="text" id="frmTerm" name="frmTerm" required/><br/>
+			<input type="submit" id="frmGo" value="search"/>
+			</form>
+		</div>
+		<div id="output"></div>
+	</body>
+</html>

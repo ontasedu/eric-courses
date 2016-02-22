@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Closures</title>
+    <link rel="stylesheet" type="text/css"
+          href="" />
+<script>
+function doStuff(){
+    console.log('inside the function');
+    var inner = function(){
+        console.log('inner function');
+    }; // end of 'inner'
+    return inner;
+}; // end of 'doStuff'
+doStuff()();
+
+
+</script>
+</head>
+<body>
+
+</body>
+</html>

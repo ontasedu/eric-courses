@@ -1,0 +1,23 @@
+input {
+    border-style:solid;
+    border-top:thick double #ff0000;
+    border-left:thick #ffffff;
+    border-right:dashed #aabbcc;
+    border-bottom:thick #ffffff;
+}
+
+.valid {
+    background-color: LightYellow;
+}
+
+.invalid {
+    background-color: PaleVioletRed;
+}
+
+table {
+     background-color: Navy;
+}
+
+table td {
+     background-color: Olive;
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Scope</title>
+    <link rel="stylesheet" type="text/css"
+          href="" />
+<script>
+var global = 'in the global scope';    
+        
+var ns = {objScope:'in the object scope'};
+    
+function fnPrivate () {
+  console.log(private); // variable 'hoisting'
+    var private = 'in the function scope';   
+    // this next variable is global (no 'var')
+    public = 'in the global namespace also';
+}
+
+console.log(global);
+console.log(ns.objScope);
+fnPrivate();
+// console.log(private); // out of scope
+console.log(public); // in scope
+    
+    
+    
+    
+    
+    </script>
+</head>
+<body>
+
+</body>
+</html>

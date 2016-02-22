@@ -1,0 +1,24 @@
+xml get:
+http://services.aonaware.com/DictService/DictService.asmx/Define?word=hello
+http://iheartquotes.com/api/v1/random?max_characters=256&max_lines=10	
+JSON:
+http://extjs.org.cn/extjs/examples/grid/survey.html
+https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=Paris
+http://api.flickr.com/services/feeds/photos_public.gne?tags=dogs&format=json
+https://twitter.com/users/fidelity.json?callback=handleResponse
+
+Binary
+http://www.mayoff.com/5-01cablecarDCP01934.jpg
+
+jQuery CDN
+http://code.jquery.com/jquery-latest.js
+
+Useful sites:
+caniuse.com
+builtwith.com
+jsperf.com
+http://www.addyosmani.com/resources/essentialjsdesignpatterns/book/
+spritecow.com
+mrdoob.com
+requirejs.org
+https://developer.mozilla.org/en-US/docs/Web/JavaScript

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loading external data via AJAX</title>
+    <link rel="stylesheet" type="text/css"
+          href="" />
+    <script>
+    function init(){
+    // create an xhr object
+    var xhr = new XMLHttpRequest();
+    // we can open absolute or relative addresses
+    // e.g. http://someserver/data.xml
+    // data ca be dynamic
+    // e.g. /data/file.asp or /data/file.jsp
+        xhr.open('get','data/categories.xml');
+    // listen for result event
+        xhr.onreadystatechange = function(){
+    // check if readystate is 4
+    if (xhr.readyState == 4 && xhr.status == 200){
+        // all the data loaded ok
+        // responseText or responseXML
+        console.log(xhr.responseXML); 
+        // we can manipulate the returned document
+        var response = xhr.responseXML;
+var catArray =      
+        response.getElementsByTagName('category');
+        var numItems = catArray.length;
+        // loop over the results and read the data
+        for (var i=0; i<numItems; i++){
+        var el = document.createElement('option');
+    el.innerHTML = catArray[i].getAttribute('id');
+        // ad this new element to the page
+            categories.appendChild(el);
+        } // end of 'for' loop
+    } 
+        };   
+    // initiate the call
+    xhr.send();
+    }
+        
+    window.onload = init;
+    </script>
+</head>
+<body>
+    <div id="main">
+    <form>
+        <select id="categories">
+        </select>
+    </form>
+    </div>
+</body>
+</html>
+
+
+

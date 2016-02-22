@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>Form Validation</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <style>
+    </style>
+    <script>
+        window.onload = init;
+        
+        function init(){
+            // add listeners for form submit
+            frmSubmit.addEventListener('click', doValidation);
+            
+            // prevent default submit event
+            function doValidation(){ //can pass in the event if you wish
+                event.preventDefault(); // form does not get submitted
+                //check validatio of form fields
+                if(frmName.value == ""){
+                    message.innerHTML = "Name is required";
+                    frmName.focus();
+                }
+                
+                if(frmName.value.length < 8){
+                     message.innerHTML = "Name must be 8 or more characters";
+                     frmName.focus();
+                }
+                
+                var numbers = /^[0-9]+$/;
+                if(frmName.value.match(numbers)){
+                    //console.log
+                     message.innerHTML = "Name cannot be a number";
+                     frmName.focus();
+                }
+            }
+        } // end of init
+     
+    </script>
+</head>
+
+<body>
+</body>
+    <div id="message"></div>
+    <form id="frmValidate" action="#" method="get">
+        <input type="text" id="frmName" /><br />
+        <input type="password" id="frmPassword" /><br />
+        <input type="submit" id="frmSubmit" /><br />
+    </form>
+</htmL>

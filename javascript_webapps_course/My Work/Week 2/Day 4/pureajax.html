@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>Pure Ajax - Loading External Data via AJAX</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <script>
+        function init(){
+            // create xhr object
+            var xhr = new XMLHttpRequest();
+            xhr.open('get','categories.xml');
+            
+            // listen for result
+            xhr.onreadystatechange = function(){
+                // check if ready state is 4
+                if(xhr.readyState == 4 && xhr.status == 200){
+                   console.log(xhr.response); 
+                }
+                var response = xhr.responseXML;
+                var catArray = response.getElementsByTagName('category');
+                //console.log(catArray.length);
+                var numItems = catArray.length;
+                
+                // loop over results and read the data form
+                for(var i=0; i<numItems; i++){
+                    var el = document.createElement('option');
+                        el.innerHTML = catArray[i].getAttribute('id') + " " +  catArray[i].childNodes[0].nodeValue;
+                    // add to the page
+                    categories.appendChild(el);
+                }// end of for loop
+            };
+            
+            // send the call
+            xhr.send();
+            
+        }
+        
+        window.onload = init;
+    </script>
+</head>
+
+<body>
+    <div id="main">
+        <form>
+            <select id="categories">
+            
+            </select>
+        
+        
+        </form>
+    </div>
+    
+</body>
+
+</htmL>

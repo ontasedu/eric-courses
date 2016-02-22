@@ -1,0 +1,18 @@
+/* filename is styles.css */
+/* Tag styles */
+body {color:teal;}
+li {font-size: 1.3em;}
+code, kbd, samp {font-family: sans-serif;}
+/* Class Styles */
+.highlight {color:orange;}
+/* ID Styles */
+#legal {font-size:0.6em;}
+/* nested styles */
+li li {font-size:1em;}
+/* pseudo style */
+p:first-of-type {color:red;}
+p~p {color:#0ff;}
+
+
+
+

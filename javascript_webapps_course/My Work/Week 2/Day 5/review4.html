@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>OOP Javascript</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <style>
+    </style>
+    <script>
+       var media = {
+           type: '',
+           _f : 'default',
+           set filename(filename){this._f = filename},
+           get filename(){ return this._f}
+       };
+        console.log('media is: ', media);
+        
+        function image(filename,alt,title){
+            obj = Object.create(media);
+            obj.type = 'img';
+            obj.filename = filename;
+            obj.alt = alt;
+            obj.title = title;
+            console.log('image is: ', obj);
+            
+            return obj;
+        }
+        
+        function audio(filename,title,duration){
+            obj = new image();
+            obj.type = 'audio';
+            obj.filename = filename;
+            obj.alt = '';
+            obj.title = title;
+            obj.duration = duration;
+            console.log('audio is: ', obj);
+            
+            return obj;
+        }
+        
+        function video(filename,autoplay,fullscreen){
+            obj = new audio();
+            obj.type = 'video';
+            obj.filename = filename;
+            obj.alt = '';
+            obj.title = '';
+            obj.duration = '';
+            obj.autoplay = autoplay;
+            obj.fullscreen = fullscreen;
+            console.log('video is: ', obj);
+            
+            return obj;
+        }
+        
+        mediaFiles = {};
+        mediaFiles.duck = new image("images/a_duck.jpg", "duck", "here is a duck");
+        mediaFiles.quack = new audio("audio/quack.mp3","quacking sound","2500");
+        mediaFiles.film = new video("video/play.ogv",true,false );
+        
+        console.log(mediaFiles);
+        window.onload = function(){
+          for(obj in mediaFiles){
+              console.log(JSON.stringify(obj));
+            var newImage = document.createElement(mediaFiles[obj].type);
+            //give the image some attributes
+            newImage.setAttribute('src',mediaFiles[obj].filename);
+            if(mediaFiles[obj].alt != ''){
+                newImage.setAttribute('alt',mediaFiles[obj].alt);
+            }
+              
+            if(mediaFiles[obj].title != ''){
+                newImage.setAttribute('title',mediaFiles[obj].title);
+            }
+            
+            
+            // add the image to the page
+            main.appendChild(newImage);
+         }     
+        }
+        
+    </script>
+</head>
+
+<body>
+    
+    <div id="main">
+    
+    </div>
+</body>
+</htmL>

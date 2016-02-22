@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Loading AJAX data with jQuery</title>
+		<script src="scripts/jquery-1.9.1.js"></script>
+		<script>
+		$(function(){
+			// set up an AJAX call
+			$.ajax({
+				type	: 'get',
+				url 	: 'data/photos.xml',
+				timeout : 3000,
+				success : successHandler,
+				error   : errorHandler,
+				complete: completeHandler
+			});
+			// event call-back handlers
+			function successHandler(data){
+				console.log(data);
+			};
+			function errorHandler(err){
+				console.log(err.message);
+			};
+			function completeHandler(){
+				console.log('AJAX is complete'); // this is a good place to clean up...
+			};
+		});
+		</script>
+	</head>
+	<body>
+		<div id="main"></div>
+	</body>
+</html>
+
+
+
+

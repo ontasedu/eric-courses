@@ -1,0 +1,34 @@
+/* styles for responsive web */
+
+#main {background-color: teal;
+width:100%;
+height: 100%;}
+
+@media screen and (max-width:420px){
+#green {background-color: green;
+    position: absolute;
+width: 50%;
+height: 100%;}
+
+#yellow {background-color: yellow;
+    position: absolute;
+    left:50%;
+width: 50%;
+height: 100%;}
+    
+}
+
+/* the next media query */
+@media screen and (max-width:740px) and (min-width:420px){
+#green {background-color: chartreuse;
+    position: absolute;
+width: 50%;
+height: 100%;}
+
+#yellow {background-color: palegoldenrod;
+    position: absolute;
+    left:50%;
+width: 50%;
+height: 100%;}
+    
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>JQuery</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <style>
+        img{float:left; width:20%; height:20%;}
+    
+    </style>
+    <script>
+        function doStuff(){
+            console.log("inside the function");
+            var inner = function(){
+                console.log("inner function");
+            };//end of inner
+            
+            return inner();
+        }; //end of doStuff
+        
+        doStuff();
+     
+    </script>
+</head>
+
+<body>
+</body>
+    <div id="main">
+    
+    </div>
+</htmL>

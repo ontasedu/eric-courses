@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="" />
+    <script src="../JavascriptLibrariesDownloads/jquery-1.9.1.js"></script>
+    <script>
+    $(function(){
+// jQuery adding event listeners
+$('#btnSubmit').on('click',  function(e){e.preventDefault;console.log('submit')})
+$('#btnReset').bind('click',function(e){e.preventDefault;console.log('reset')})
+// only JQ1.8 $('#btnOther').live('click', function(e){e.preventDefault;console.log('other')})
+
+});
+    
+    </script>
+    </head>
+    <body>
+        <input id="btnSubmit" type="submit" value="submit button" />
+        <input id="btnReset"  type="reset" value="reset button" />
+        <input id="btnOther"  type="button" value="other button" />
+        
+        
+        
+        
+        
+    </body>
+</html>

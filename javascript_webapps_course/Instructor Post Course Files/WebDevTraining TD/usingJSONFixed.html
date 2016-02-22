@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Using JSON</title>
+<style>
+img {width: 25%;} /* so the images line up nicely */
+</style>
+    <script>
+window.onload = function(){
+// assign event listener
+frmSearch.addEventListener('click', doSearch);
+var myURL = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="; // nb we add a parameter later
+    // prepare an xhr object
+    var xhr = new XMLHttpRequest();
+// listen for ok status
+    xhr.onreadystatechange = function(){
+      //  console.log(xhr.status);
+      if(xhr.readyState == 4 && xhr.status == 200){
+      //  console.log(xhr.response); 
+        // parse the JSON into a true object
+        var obj = JSON.parse(xhr.response);
+// console.log(obj.responseData.results);// comment this out
+// iterate over the results
+for(var i=0; i<4; i++){
+ var imageURL = obj.responseData.results[i].url;
+ var imageALT = obj.responseData.results[i].content;
+ var imageTITLE = obj.responseData.results[i].title;
+// create an image
+var newImage = document.createElement('img');
+    newImage.setAttribute('src', imageURL);
+    newImage.setAttribute('alt', imageALT);
+    newImage.setAttribute('title', imageTITLE);
+// place image inside page
+    main.appendChild(newImage);
+}
+      }
+    }
+// call-back handlers
+function doSearch(){
+    event.preventDefault();
+    var searchTerm = frmSearchTerm.value;
+        myURL += searchTerm;
+        xhr.open('get', myURL); // move this line to here
+    // make the call
+    xhr.send();
+} // end of 'doSearch' function
+    
+}
+</script>
+</head>
+<body>
+<div id="main">
+<form>
+search term <input type="text" id="frmSearchTerm" 
+                   placeholder="search"
+                   required /><br/>
+<input type="submit" id="frmSearch" value="search"/>
+</form>    
+</div>
+</body>
+    
+    
+    
+    
+</html>
+
+

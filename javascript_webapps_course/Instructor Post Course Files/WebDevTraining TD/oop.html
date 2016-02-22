@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+    Object Oriented Programming in JavaScript </title>
+<script>
+// build a data-type-safe object
+var p = {
+         x:1.0,
+         y:1.0,
+         get r() { return Math.sqrt(
+         this.x * this.x  + this.y * this.y
+         )},
+         set r(newValue) {
+           var oldValue = Math.sqrt(
+            this.x * this.x  + this.y * this.y
+           );
+           var ratio = newValue/oldValue;
+           this.x = this.x * ratio;
+           this.y = this.y * ratio;
+         },
+    get theta() {return Math.atan2(this.x, this.y)}
+        };
+// test the object
+p.r = 5;
+// create a 3-d version of p    
+var p3 = Object.create(p); // p3 inherits from p
+    p3.z = 9; // exists in p3 not in p
+console.log(p3.hasOwnProperty('theta')); // false
+console.log(p.hasOwnProperty('theta')); // true
+// ECMAScript 3 properties    
+console.log( p.toString() );
+console.log(p.hasOwnProperty(toString)); // false
+// enumerable properties
+// declare non-enumerable properties
+Object.defineProperty(p3, 'noEnum', {value:'test', enumerable:true}); // note
+    
+for(var prop in p3){
+ console.log(prop + " : " + p3[prop]);   
+}
+    
+    
+    
+</script>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+

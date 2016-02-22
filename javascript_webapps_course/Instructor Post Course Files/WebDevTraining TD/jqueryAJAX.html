@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>loading AJAX via jQuery</title>
+    <script src="libs/jquery-1.9.1.min.js"></script>
+    <script>
+    $(function(){
+    // configure an AJAX call
+    var url = "data/photos.xml";
+    var method = "get";
+    var timeout = 3000;
+    $.ajax(url, {method   : method, 
+                 timeout  : timeout,
+                 success  : handleSuccess,
+                 error    : handleError,
+                 complete : handleComplete});
+    // handle success
+    function handleSuccess(data){
+     // all the data loaded ok
+     console.log(data);
+    }
+    // handle errors
+    function handleError(error){
+     // oops
+     console.log(error);
+    }
+    // handle complete
+    function handleComplete(){
+     // do clean up here   
+    }
+    });
+    </script>
+</head>
+<body>
+    <div id="main"></div>
+</body>
+</html>
+
+
+

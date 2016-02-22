@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title>JavaScript form Validation</title>
+    <script>
+    // wait for the page to load
+    window.onload = init;
+        
+function init(){
+    // add listeners for form submit
+    frmSubmit.addEventListener('click',doValidation)
+    // prevent default submit event
+    function doValidation(event){ // event is passed in automatically
+    event.preventDefault(); // ...so the form does not get submitted
+    // check validation of form fields
+    if(frmName.value == ""){
+        message.innerHTML= "name is required";
+        frmName.focus();
+    }
+    if(frmName.value.length < 8){
+        message.innerHTML= "Name must be 8 or more character";
+        frmName.focus();
+    }
+    var numbers = /^[0-9]+$/; // regular expression 
+    if(frmName.value.match(numbers)) {
+        message.innerHTML= "Name can't be a number";
+        frmName.focus();
+    }
+    } // end of 'doValidation' function
+    // calls to the validation function
+    validate('test', 'string'); //, {length:2});
+} // end of 'init' function
+// custom validation function        
+function validate(value, type, facets){
+    if(arguments[2] == undefined){
+     arguments[2] = "false";   
+    }
+    console.log(arguments);
+    if(arguments[0]=="" || arguments[1]=="" || arguments[2]==""){
+     // can't validate   
+    }
+}
+        
+        
+        
+</script>
+</head>
+<body><div id="message"></div>
+<form id="frmValidate" action="#" method="get">
+    <input type="text" id="frmName" /><br/>
+    <input type="password" id="frmPassword"/><br/>
+    <input type="submit" id="frmSubmit"/>
+ </form>
+</body>
+</html>
+
+
+
+
+
+
+

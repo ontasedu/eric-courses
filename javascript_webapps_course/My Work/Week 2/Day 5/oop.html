@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>OOP Javascript</title>
+    <!--link rel="stylesheet" type="text/css" href="css/responsive.css"-->
+    <style>
+    </style>
+    <script>
+       //build a data type-safe object
+        var p = {
+            x:1.0,
+            y:1.0,
+            get r() {return Math.sqrt(this.x * this.x + this.y * this.y)},
+            set r(newValue){
+                var OldValue = Math.sqrt(this.x * this.x + this.y * this.y);
+                var ratio = newValue / OldValue;
+                this.x = this.x * ratio;
+                this.y = this.y * ratio;
+            },
+            
+           get theta(){
+               return Math.atan2(this.x, this.y);
+           }
+        };
+        
+        
+        // test the object
+        console.log(p.r);
+        
+        p.r = 5;
+        console.log(p);
+        
+        p.theta = 5;
+        console.log(p);
+        
+        
+        //create a 3d version of p
+        var p3 = Object.create(p); // p3 inherits from p
+        p3.z = 9; //exists in p3 not in p
+        console.log(p3.hasOwnProperty('theta'));
+        // ECMAScript 3 properties
+        console.log(p.toString());
+        
+        //enumerable properties
+        for(var prop in p3){
+            console.log(prop +" : "+ p3[prop]);
+        }
+        // declare non enumerable properties
+        Object.defineProperty(p3,'noEnum', {value:'test', propertyIsEnumerable:false});
+         console.log(p3);
+        
+        for(var prop in p3){
+            console.log(prop +" : "+ p3[prop]);
+        }
+
+    </script>
+</head>
+
+<body>
+</body>
+</htmL>

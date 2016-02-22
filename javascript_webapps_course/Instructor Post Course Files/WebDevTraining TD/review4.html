@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fourth Review Exercise</title>
+</head>
+<script>
+// Object inheritance tree
+var media = Object.create({
+      _f : 'default',
+      set filename(newName) {this._f = newName},
+      get filename() {return this._f},
+    });
+var image = Object.create(media);
+    image.alt      = null;
+    image.title    = null;
+var audio = Object.create(image);
+    audio.duration = null;
+var video = Object.create(audio);
+    video.autoplay   = null;
+    video.fullscreen = null;
+// concrete instances
+var duck = Object.create(image);
+    duck.filename = "images/a_duck.jpg";
+    duck.alt="duck";
+    duck.title="here is a duck";
+var quack = Object.create(audio);
+    quack.filename = "sounds/loop.mp3";
+    quack.title="quacking sound";
+    quack.duration="2500";
+var film = Object.create(video);
+    film.filename = "video/band.mp4";
+    film.autoplay=true;
+    film.fullscreen=false;
+// place the image on the page
+var newImage = document.createElement('img');
+    newImage.setAttribute('src', duck.filename);
+    newImage.setAttribute('alt', duck.alt);
+    newImage.setAttribute('title', duck.title);
+main.appendChild(newImage);
+// place the audio on the page
+var newAudio = document.createElement('audio');
+    newAudio.setAttribute('src', quack.filename);
+    newAudio.setAttribute('controls', true);
+    newAudio.setAttribute('duration', quack.duration);
+main.appendChild(newAudio);
+// place the video on the page
+var newVideo = document.createElement('video');
+    newVideo.setAttribute('src', film.filename);
+    newVideo.setAttribute('autoplay', film.autoplay);
+    newVideo.setAttribute('fullscreen', film.fullscreen);
+main.appendChild(newVideo);
+</script>
+<body>
+    <div id="main"></div>
+</body>
+</html>

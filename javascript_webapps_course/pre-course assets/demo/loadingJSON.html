@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Demo loading JSON data via AJAX (only works with web security turned off)</title>
+	</head>
+	<style>
+		img {float:left;width:20%;}
+	</style>
+	<body>
+		<form id="frmGetJSON">
+			<input type="text" id="frmParam">
+            <input type="submit" value="go"/>
+		</form>
+		<div id="output"></div>
+	</body>
+	<script>
+	function init(){
+	  document.getElementById('frmGetJSON').addEventListener('submit', getData)
+	}
+	function getData(){
+	// prepare for an AJAX call
+	var request = new XMLHttpRequest();
+	var param = document.getElementById('frmParam').value;
+	var urlWithParam = ns.url + param;
+	request.open(ns.method, urlWithParam);
+	request.onreadystatechange = function(){
+		// check the ready state: we need state 4
+		if(request.readyState === 4 && request.status === 200){
+			// all the data has returned and the page is good
+			console.log(request.responseText);
+			var out = document.getElementById('output');
+			//var 
+			resultObj = JSON.parse(request.responseText);
+			var resultObj = JSON.parse(request.responseText).responseData.results;
+			console.log(resultObj);
+			for(prop in resultObj){
+				var nextImage = document.createElement('img');
+				nextImage.setAttribute('src', resultObj[prop].url);
+				console.log(nextImage);
+				out.appendChild(nextImage);
+			}
+		}
+	};	
+		// make the call
+		request.send();
+	};
+// namespace
+var ns = {
+		method		 : 'get',
+		url   		 : 'https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=',
+};  
+// page load
+window.onload = init();
+</script>
+</html>

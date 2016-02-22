@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Examples</title>
+    <script src="libs/jquery-1.9.1.min.js"></script>
+    <script>
+    // wait for the page to load
+    $(function(){
+    // select something then do something
+    $('p:first').fadeOut(2000).fadeIn(1500);
+    // create a new element
+    var newEl = $('<input>');
+        newEl.attr('type', 'button');
+        newEl.attr('value', 'click me');
+    // add event listener to the new button
+        newEl.on('click', doStuff); // or bind
+    // place it on the page
+    $('#main').append(newEl);
+    // handle the button click event    
+    function doStuff(){
+     newEl.off('click', doStuff); // remove listener
+     $('#main').fadeOut(700);
+    }
+    });
+    
+    </script>
+</head>
+<body>
+<div id="main">
+    <p>Welcome to my jQuery page</p>
+    <p>jquery uses CSS syntax selectors</p>
+    <p>jQuery makes JavaScript easy</p>
+</div>
+</body>
+</html>
+
+
+
+

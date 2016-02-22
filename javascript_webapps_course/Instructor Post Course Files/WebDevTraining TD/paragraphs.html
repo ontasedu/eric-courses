@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>
+/* The CSS Box Model */ 
+    
+p {padding: 22px;
+   border : solid 4px orange;
+   margin-top : 28px;
+   margin-bottom : 12px;}
+
+</style>
+
+    
+<p>This is a paragraph.</p>
+<p>This is a paragraph.</p>
+<p>This is a paragraph.</p>
+
+<form name="frmControl" id="frmControl"
+      action="#" method="get">
+<fieldset>
+<legend>User Details</legend>
+surname <input type="text"
+        name="frmSurname" id="frmSurname"
+        value="O'Connor" /> <br/>
+<input type="button" value="press" />
+<input type="submit" value="send"  />
+</fieldset>
+</form>
+<style>
+ol {list-style: lower-roman;}
+</style>
+<ol start="6" reversed>
+  <li>CSS borders are not inherited</li>
+  <li>Box model: vertical margins overlap</li>
+</ol>
+    
+</body>
+<script>
+var allParas = document.getElementsByTagName('p');    
+    console.log(allParas.length);
+</script>
+</html>

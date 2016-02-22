@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>loading Dynamic Iamges</title>
+    <style>
+    img {float:left; width:20%; height: 20%;}
+    </style>
+    <script>
+    // declare a variable for the image location
+    var location1 = 'data/gallery/';
+    var filename = 'animals03';
+        location1 += filename + '.jpg';
+    // wait for the page to load
+    window.onload = function(){
+     // create a new IMG element
+     var newImage = document.createElement('img');
+     // give the image some attributes
+ newImage.setAttribute('src',  location1);
+ newImage.setAttribute('alt',  'some text');
+ newImage.setAttribute('title','hover text');
+     // add the image to the page
+     main.appendChild(newImage);
+    }
+    </script>
+</head>
+<body>
+    <div id="main">
+        <img src="images/a_beetle.jpg"
+             alt="for screen readers"
+             title="appears when hovered" />
+    </div>
+</body>
+</html>
+
+
+

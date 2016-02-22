@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<htmL>
+<head>
+    
+    <title>Scope</title>
+        
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+    <script>
+        var global = 'in the global scope';
+        var ns = {objScope:'in the object scope'};
+        
+        function fnPrivate(){
+            var private = 'in function scope';
+                    console.log(private);
+
+        }
+        
+        console.log(global);
+        console.log(ns.objScope);
+        fnPrivate();
+    </script>
+</head>
+
+<body>
+    
+    
+</body>
+
+</htmL>

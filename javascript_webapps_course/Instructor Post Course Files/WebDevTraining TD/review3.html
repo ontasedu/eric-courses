@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Exercise: 
+    loading AJAX for dynamic images</title>
+    <style>
+    img {float:left; width:20%; height: 20%;}
+    </style>
+    <script>
+function init(){
+    var xhr = new XMLHttpRequest();
+        xhr.open('get','data/photos.xml');
+    // listen for result event
+        xhr.onreadystatechange = function(){
+    // check if readystate is 4
+    if (xhr.readyState == 4 && xhr.status == 200){
+        var response = xhr.responseXML;
+var imageArray =      
+        response.getElementsByTagName('image');
+var numImages = imageArray.length;
+// loop over the results and read the data
+for (var i=0; i<numImages; i++){
+var newImage = document.createElement('img');
+var filePath = 'data/gallery/' + imageArray[i].getAttribute('filename') + '.jpg';
+newImage.setAttribute('src', filePath); newIamge.setAttribute('alt',imageArray[i].getAttribute('category')); newIamge.setAttribute('title',imageArray[i].getAttribute('photographer'));
+            main.appendChild(newImage);
+        } // end of 'for' loop
+    } 
+        };   
+    // initiate the call
+    xhr.send();
+    }
+        
+    window.onload = init;
+
+    </script>
+</head>
+<body>
+    <div id="main"></div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Counting which uses Closures</title>
+<script>
+var schedule = function(timeout, callbackfunction) {
+    return {
+        start: function() {
+            setTimeout(callbackfunction, timeout)
+        }
+    };
+};
+(function() {
+    var timeout = 1000; // 1 second
+    var count = 0;
+    schedule(timeout, function doStuff() {
+        console.log(++count);
+        schedule(timeout, doStuff);
+    }).start(timeout); // only called once...
+})();
+// "timeout" and "count" variables
+// do not exist in this scope.
+</script>
+</head>
+<body>
+
+</body>
+</html>
